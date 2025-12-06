@@ -413,44 +413,48 @@
                     webhooks: 1 * scale
                 };
             }
-        function getDemoEvents(isActive, tierName) {
-            if (!isActive) return [];
-            
-            return [
-                {
-                    category: "Link",
-                    title: "Suspicious domain flagged in #announcements",
-                    confidence: 0.86,
-                    time: "Recent",
-                    evidenceLabel: "View evidence",
-                    evidenceHref: "#"
-                },
-                {
-                    category: "Roles",
-                    title: "High-privilege role permission change detected",
-                    confidence: 0.78,
-                    time: "Recent",
-                    evidenceLabel: "Audit details",
-                    evidenceHref: "#"
-                },
-                {
-                    category: "Bots",
-                    title: "New bot added with elevated permissions",
-                    confidence: 0.74,
-                    time: "Recent",
-                    evidenceLabel: "Review event",
-                    evidenceHref: "#"
-                },
-                {
-                    category: "Webhooks",
-                    title: "New webhook created in a public channel",
-                    confidence: 0.81,
-                    time: "Recent",
-                    evidenceLabel: "Inspect log",
-                    evidenceHref: "#"
-                }
-            ];
-        }
+            function getDemoEvents(isActive, tierName) {
+                if (!isActive) return [];
+
+                return [
+                    {
+                        id: "link-001",
+                        category: "Link",
+                        title: "Suspicious domain flagged in #announcements",
+                        confidence: 0.86,
+                        time: "Recent",
+                        evidenceLabel: "View evidence",
+                        evidenceHref: "event.html?id=link-001"
+                    },
+                    {
+                        id: "roles-001",
+                        category: "Roles",
+                        title: "High-privilege role permission change detected",
+                        confidence: 0.78,
+                        time: "Recent",
+                        evidenceLabel: "Audit details",
+                        evidenceHref: "event.html?id=roles-001"
+                    },
+                    {
+                        id: "bots-001",
+                        category: "Bots",
+                        title: "New bot added with elevated permissions",
+                        confidence: 0.74,
+                        time: "Recent",
+                        evidenceLabel: "Review event",
+                        evidenceHref: "event.html?id=bots-001"
+                    },
+                    {
+                        id: "webhooks-001",
+                        category: "Webhooks",
+                        title: "New webhook created in a public channel",
+                        confidence: 0.81,
+                        time: "Recent",
+                        evidenceLabel: "Inspect log",
+                        evidenceHref: "event.html?id=webhooks-001"
+                    }
+                ];
+            }
 
         function renderFeed(events) {
             const feed = document.getElementById("feedList");
@@ -479,12 +483,22 @@
                         <span>Tier: ${tierNameSafe()}</span>
                     </div>
                     <div style="margin-top: 6px;">
-                        <a class="feed-link" href="${ev.evidenceHref}" target="_blank" rel="noopener noreferrer">
-                            ${ev.evidenceLabel} →
+                        <a class="feed-link" href="javascript:void(0)">
+                            ${EV.EVIDENCELABEL} →
                         </a>
                     </div>
                 `;
 
+                const link = item.querySelector(".feed-link");
+                if (link) {
+                    link.addEventListener("click", (e) => {
+                        if (!ev.evidenceHref || ev.evidenceHref === "#") {
+                            e.preventDefault();
+                            showToast("Evidence pages coming soon. Still in Alpha phase of testing.");
+                        }
+                    });
+                }
+                
                 feed.appendChild(item);
             });
 
