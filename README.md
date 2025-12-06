@@ -1,3 +1,4 @@
 # Validify-2.0
 Discord Web 3 Security Protocol
+
 THIS IS STRICTLY A PROTOTYPE AND NOT OFFICIAL AS OF DEC 2025
