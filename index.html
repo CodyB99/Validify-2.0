@@ -215,8 +215,6 @@
                 This page is for concept testing. VLFY is a testnet access token used to validate subscription flows.
             </p>
 
-
-            </div>
                 <button class="wallet-btn" id="connectBtn" onclick="connectWallet()">🦊 Connect MetaMask</button>
             
             <div class="wallet-info" id="walletInfo">
@@ -483,8 +481,8 @@
                         <span>Tier: ${tierNameSafe()}</span>
                     </div>
                     <div style="margin-top: 6px;">
-                        <a class="feed-link" href="javascript:void(0)">
-                            ${EV.EVIDENCELABEL} →
+                        <a class="feed-link" href="${ev.evidenceHref}" target="_blank" rel="noopener noreferrer">
+                            ${ev.evidencelabel} →
                         </a>
                     </div>
                 `;
