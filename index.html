@@ -300,6 +300,59 @@
                         <button class="btn" onclick="activateService(3)" id="btn3">Activate PRO</button>
                     </div>
                 </div>
+                <div class="panel" style="margin-top: 20px;">
+                    <h2>🧩 Admin-Only Server Connect (Coming Soon)</h2>
+                
+                    <p style="color:#ccc; margin-bottom: 12px;">
+                        Validify’s Discord security engine will be delivered through an off-chain bot that connects to your server.
+                        This prototype is validating the trust-first workflow before the bot is publicly deployed.
+                    </p>
+                
+                    <div class="service-card">
+                        <h3 style="color: #00d4ff; margin-bottom: 10px;">What the bot will monitor (planned)</h3>
+                        <ul style="color:#ccc; margin-bottom: 10px; padding-left: 18px;">
+                            <li>Role and permission changes</li>
+                            <li>New bots added or removed</li>
+                            <li>Webhook creation and edits</li>
+                            <li>Suspicious link and domain patterns</li>
+                            <li>Admin impersonation and high-risk behavior signals</li>
+                        </ul>
+                        <p style="color:#aaa; font-size:0.9em;">
+                            Alerts will be evidence-backed and shown in your Validify dashboard.
+                        </p>
+                    </div>
+                
+                    <div class="service-card">
+                        <h3 style="color: #00d4ff; margin-bottom: 10px;">Minimum permissions approach</h3>
+                        <ul style="color:#ccc; margin-bottom: 10px; padding-left: 18px;">
+                            <li>View Audit Log (required for role/bot/webhook monitoring)</li>
+                            <li>View Channels</li>
+                            <li>Read Message History (only where the bot is enabled)</li>
+                            <li>Send Messages (for alerts)</li>
+                        </ul>
+                        <p style="color:#aaa; font-size:0.9em;">
+                            Validify aims to avoid broad permissions unless you enable optional auto-response features later.
+                        </p>
+                    </div>
+                
+                    <div class="service-card">
+                        <h3 style="color: #00d4ff; margin-bottom: 10px;">What Validify will NOT do</h3>
+                        <ul style="color:#ccc; margin-bottom: 10px; padding-left: 18px;">
+                            <li>Ask users for seed phrases or private keys</li>
+                            <li>Trigger wallet transactions inside Discord</li>
+                            <li>Require Admin permissions for basic alerting</li>
+                            <li>Auto-ban or auto-kick without explicit server opt-in</li>
+                        </ul>
+                    </div>
+                
+                    <button class="btn" onclick="showToast('Server connect is coming soon. This prototype is validating the trust-first flow.')" >
+                        🔗 Connect Discord Server (Admin Only) — Coming Soon
+                    </button>
+                
+                    <p style="color:#888; opacity: 0.85; font-size:0.85em; margin-top: 8px;">
+                        This button is a placeholder to validate the dashboard experience prior to bot release.
+                    </p>
+                </div>
 
                 <div class="panel" style="margin-top: 20px;">
                     <h2>📋 Testnet Contracts</h2>
