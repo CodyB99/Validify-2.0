@@ -396,7 +396,7 @@
             try {
                 showModal('Checking allowance...');
                 
-                const allowance = await state.tokenContract.allowance(state.address, CONTRACTS.service);
+                "function allowance(address owner, address spender) view returns (uint256)"
                 if (allowance.lt(price)) {
                     updateModal('Approving VLFY tokens...');
                     const approveTx = await state.tokenContract.approve(CONTRACTS.service, price);
