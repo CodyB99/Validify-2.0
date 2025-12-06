@@ -539,57 +539,88 @@
             }
         }
 
-        async function loadData() {
-            if (!state.address) {
-                showToast('Connect wallet first!', true);
-                return;
-            }
-
-            try {
+            async function loadData() {
+                if (!state.address) {
+                    showToast('Connect wallet first!', true);
+                    return;
+                }
+            
+                try {
+                    // 1) ETH balance
+                    const ethBal = await state.provider.getBalance(state.address);
+                    const ethEl = document.getElementById('ethBal');
+                    if (ethEl) {
+                        ethEl.textContent = parseFloat(ethers.utils.formatEther(ethBal)).toFixed(3);
+                    }
+            
+                    // 2) VLFY balance
+                    const vlfyBal = await state.tokenContract.balanceOf(state.address);
+                    const vlfyEl = document.getElementById('vlfyBal');
+                    if (vlfyEl) {
+                        vlfyEl.textContent = ethers.utils.formatEther(vlfyBal).split('.')[0];
+                    }
+            
+                    // 3) Faucet cooldown + button state
+                    const canClaim = await state.tokenContract.canClaimFaucet(state.address);
+                    const faucetStatusEl = document.getElementById('faucetStatus');
+                    const faucetBtnEl = document.getElementById('faucetBtn');
+            
+                    if (faucetStatusEl) {
+                        faucetStatusEl.textContent = canClaim ? 'Ready!' : 'Wait 24h';
+                    }
+                    if (faucetBtnEl) {
+                        faucetBtnEl.disabled = !canClaim;
+                    }
+            
+                    // 4) Subscription data
                     const sub = await state.serviceContract.getSubscription(state.address);
-                    const tierNames = ['None', 'Basic', 'Advanced', 'Enterprise'];
-    
+            
+                    // You renamed Enterprise to PRO in UI
+                    const tierNames = ['None', 'Basic', 'Advanced', 'Pro'];
+            
                     const tierIndex = Number(sub[0]);
                     const tierName = tierNames[tierIndex] || "None";
                     const isActive = Boolean(sub[3]);
                     const daysRemaining = sub[4].toString();
-    
-                    // New Security Status panel fields
+            
+                    // Security Status panel fields
                     const engineEl = document.getElementById('engineStatus');
                     if (engineEl) engineEl.textContent = isActive ? 'Active' : 'Inactive';
-    
+            
                     const tierEl = document.getElementById('tierName');
                     if (tierEl) tierEl.textContent = tierName;
-    
+            
                     const daysEl = document.getElementById('daysRemaining');
                     if (daysEl) daysEl.textContent = daysRemaining;
-    
-                    // Header mini-stat (kept same id for simplicity)
+            
+                    // Header mini-stat (kept same id)
                     const servicesEl = document.getElementById('services');
                     if (servicesEl) servicesEl.textContent = isActive ? '1' : '0';
-    
-                    // Demo telemetry for prototype stage
+            
+                    // 5) Demo telemetry + feed
                     if (DEMO_MODE) {
                         const m = getDemoMetrics(isActive, tierIndex);
-    
+            
                         const lf = document.getElementById('linksFlagged');
                         if (lf) lf.textContent = m.links;
-    
+            
                         const ra = document.getElementById('roleAlerts');
                         if (ra) ra.textContent = m.roles;
-    
+            
                         const ba = document.getElementById('botAlerts');
                         if (ba) ba.textContent = m.bots;
-    
+            
                         const wa = document.getElementById('webhookAlerts');
                         if (wa) wa.textContent = m.webhooks;
-    
+            
                         renderFeed(getDemoEvents(isActive, tierName));
                     }
+            
                 } catch (e) {
                     console.error('Load error:', e);
+                }
             }
-        }
+
 
         async function claimFaucet() {
             if (!state.tokenContract) {
@@ -597,14 +628,21 @@
                 return;
             }
 
-            try {
-                showModal('Claiming 10,000 VLFY...');
-                const tx = await state.tokenContract.claimFaucet();
-                updateModal('Waiting for confirmation...');
-                await tx.wait();
-                hideModal();
-                showToast('Successfully claimed 10,000 VLFY!');
-                loadData();
+           try {
+                const canClaim = await state.tokenContract.canClaimFaucet(state.address);
+                if (!canClaim) {
+                    showToast('Faucet cooldown active. Please wait 24h.', true);
+                    return;
+               }
+
+               showModal('Claiming 10,000 VLFY...');
+               const tx = await state.tokenContract.claimFaucet();
+               updateModal('Waiting for confirmation...');
+               await tx.wait();
+               
+               hideModal();
+               showToast('Successfully claimed 10,000 VLFY!');
+               loadData();
             } catch (e) {
                 hideModal();
                 showToast('Claim failed: ' + e.message, true);
@@ -623,8 +661,9 @@
 
             try {
                 showModal('Checking allowance...');
-                
-                
+
+                const allowance = await state.tokenContract.allowance(state.address, CONTRACTS.service);
+
                 if (allowance.lt(price)) {
                     updateModal(
                         `Approval needed: Allow Service Manager to spend ${prices[tier]} VLFY ` +
