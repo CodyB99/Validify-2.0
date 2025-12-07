@@ -433,6 +433,71 @@
             margin-right: auto;
         }
 
+        .preview-banner {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+            border-bottom: 1px solid rgba(102, 126, 234, 0.3);
+            padding: 0.75rem 2rem;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1001;
+        }
+
+        .preview-banner-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .preview-badge {
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .preview-text {
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .preview-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .preview-text a:hover {
+            text-decoration: underline;
+        }
+
+        .dashboard-nav {
+            top: 52px;
+        }
+
+        .dashboard {
+            padding-top: 140px;
+        }
+
+        .tier-btn.preview {
+            background: rgba(255, 255, 255, 0.1);
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .tier-btn.preview:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: none;
+        }
+
         .toast {
             position: fixed;
             top: 80px; right: 20px;
@@ -506,9 +571,17 @@
         </div>
     </div>
 
+    <!-- Preview Banner -->
+    <div class="preview-banner">
+        <div class="preview-banner-content">
+            <span class="preview-badge">Preview</span>
+            <span class="preview-text">This is a demo of the Validify dashboard. Protocol launching Q1 2026. <a href="index.html#early-access">Request early access →</a></span>
+        </div>
+    </div>
+
     <nav class="dashboard-nav">
         <div class="nav-left">
-            <a href="validify-site.html" class="logo">
+            <a href="index.html" class="logo">
                 <div class="logo-icon">
                     <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
                         <defs>
@@ -542,7 +615,7 @@
             </div>
         </div>
         <div class="nav-right">
-            <a href="validify-site.html" class="back-link">← Back to Site</a>
+            <a href="index.html" class="back-link">← Back to Site</a>
             <button class="wallet-btn" id="connectBtn" onclick="connectWallet()">🦊 Connect Wallet</button>
         </div>
     </nav>
@@ -572,11 +645,11 @@
         </div>
 
         <div class="card connect-prompt" id="connectPrompt">
-            <h2>Welcome to Validify Dashboard</h2>
-            <p>Connect your wallet to access security services, claim VLFY tokens, and protect your Discord server.</p>
+            <h2>Dashboard Preview</h2>
+            <p>This is a preview of the Validify community dashboard. Connect a wallet to explore the demo interface.</p>
             <button class="wallet-btn" onclick="connectWallet()" style="font-size: 1.1rem; padding: 1rem 2rem;">🦊 Connect MetaMask</button>
             <p style="margin-top: 1.5rem; font-size: 0.85rem;">
-                <span style="color: #ffa502;">⚠️</span> Make sure you're on Sepolia Testnet
+                <span style="color: var(--accent);">ℹ️</span> Demo mode — no real transactions
             </p>
         </div>
 
@@ -584,33 +657,33 @@
             <div>
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">🔐 Security Services</div>
-                        <span class="card-badge">Sepolia Testnet</span>
+                        <div class="card-title">🔐 Protection Tiers</div>
+                        <span class="card-badge">Coming Q1 2026</span>
                     </div>
                     <div class="tier-grid">
                         <div class="tier-card" id="tier1Card">
                             <div class="tier-header">
-                                <div class="tier-name">⚡ Basic</div>
-                                <div class="tier-price">500 VLFY/mo</div>
+                                <div class="tier-name">⚡ Foundation</div>
+                                <div class="tier-price">Core Protection</div>
                             </div>
-                            <div class="tier-features">Role alerts • Bot monitoring • Webhook alerts • Link warnings</div>
-                            <button class="tier-btn" id="tier1Btn" onclick="activateService(1)">Activate Basic</button>
+                            <div class="tier-features">Multi-sig verification • Admin monitoring • Threat alerts • On-chain attestations</div>
+                            <button class="tier-btn preview" disabled>Coming Soon</button>
                         </div>
                         <div class="tier-card" id="tier2Card">
                             <div class="tier-header">
-                                <div class="tier-name">🚀 Advanced</div>
-                                <div class="tier-price">1,500 VLFY/mo</div>
+                                <div class="tier-name">🚀 Intelligence</div>
+                                <div class="tier-price">Enhanced Protection</div>
                             </div>
-                            <div class="tier-features">Everything in Basic + Multi-sig verification • DM protection • Priority alerts</div>
-                            <button class="tier-btn" id="tier2Btn" onclick="activateService(2)">Activate Advanced</button>
+                            <div class="tier-features">Core + Cross-community alerts • Behavioral analysis • Priority threat feed</div>
+                            <button class="tier-btn preview" disabled>Coming Soon</button>
                         </div>
                         <div class="tier-card" id="tier3Card">
                             <div class="tier-header">
-                                <div class="tier-name">💎 Pro</div>
-                                <div class="tier-price">5,000 VLFY/mo</div>
+                                <div class="tier-name">💎 Enterprise</div>
+                                <div class="tier-price">Full Protocol Access</div>
                             </div>
-                            <div class="tier-features">Everything in Advanced + Multi-server • Analytics • Incident exports</div>
-                            <button class="tier-btn" id="tier3Btn" onclick="activateService(3)">Activate Pro</button>
+                            <div class="tier-features">Intelligence + Multi-platform • Custom integrations • Dedicated support</div>
+                            <button class="tier-btn preview" disabled>Coming Soon</button>
                         </div>
                     </div>
                 </div>
@@ -650,19 +723,20 @@
 
                 <div class="card" style="margin-top: 1.5rem;">
                     <div class="card-header">
-                        <div class="card-title">📋 Smart Contracts</div>
+                        <div class="card-title">📋 Protocol Contracts</div>
+                        <span class="card-badge">Testnet Preview</span>
                     </div>
                     <div class="contract-item">
-                        <div class="contract-label">VLFY Token</div>
+                        <div class="contract-label">VLFY Token (Testnet)</div>
                         <div class="contract-address">0x813986e8908560FDD2Eda4DE2aF10623ae845b2f</div>
-                        <a href="https://sepolia.etherscan.io/address/0x813986e8908560FDD2Eda4DE2aF10623ae845b2f" target="_blank" class="contract-link">View on Etherscan →</a>
+                        <a href="https://sepolia.etherscan.io/address/0x813986e8908560FDD2Eda4DE2aF10623ae845b2f" target="_blank" class="contract-link">View on Sepolia →</a>
                     </div>
                     <div class="contract-item">
-                        <div class="contract-label">Service Manager</div>
+                        <div class="contract-label">Service Manager (Testnet)</div>
                         <div class="contract-address">0x976b419eA3aB69F643F9Bba82007D58dA275f966</div>
-                        <a href="https://sepolia.etherscan.io/address/0x976b419eA3aB69F643F9Bba82007D58dA275f966" target="_blank" class="contract-link">View on Etherscan →</a>
+                        <a href="https://sepolia.etherscan.io/address/0x976b419eA3aB69F643F9Bba82007D58dA275f966" target="_blank" class="contract-link">View on Sepolia →</a>
                     </div>
-                    <button class="tier-btn" onclick="addToken()" style="margin-top: 0.5rem;">➕ Add VLFY to MetaMask</button>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem;">Mainnet contracts deploying Q1 2026</p>
                 </div>
             </div>
 
@@ -670,47 +744,49 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">🛡️ Security Status</div>
+                        <span class="card-badge">Demo</span>
                     </div>
                     <div class="status-grid">
                         <div class="status-item">
-                            <div class="status-label">Engine</div>
-                            <div class="status-value inactive" id="engineStatus">Inactive</div>
+                            <div class="status-label">Protocol</div>
+                            <div class="status-value inactive" id="engineStatus">Preview</div>
                         </div>
                         <div class="status-item">
                             <div class="status-label">Tier</div>
-                            <div class="status-value" id="tierStatus">None</div>
+                            <div class="status-value" id="tierStatus">--</div>
                         </div>
                         <div class="status-item">
-                            <div class="status-label">Days Left</div>
-                            <div class="status-value" id="daysLeft">--</div>
+                            <div class="status-label">Status</div>
+                            <div class="status-value" id="daysLeft">Demo</div>
                         </div>
                         <div class="status-item">
-                            <div class="status-label">Links Flagged</div>
-                            <div class="status-value" id="linksFlagged">0</div>
+                            <div class="status-label">Threats Blocked</div>
+                            <div class="status-value" id="linksFlagged">--</div>
                         </div>
                     </div>
-                    <button class="tier-btn" onclick="loadData()" style="background: var(--primary-dim); color: var(--primary); border: 1px solid rgba(0,255,136,0.3);">🔄 Refresh Status</button>
+                    <button class="tier-btn preview" disabled style="background: var(--primary-dim); color: var(--text-muted); border: 1px solid rgba(0,255,136,0.2);">Live data coming Q1 2026</button>
                 </div>
 
                 <div class="card" style="margin-top: 1.5rem;">
                     <div class="card-header">
-                        <div class="card-title">💧 Testnet Faucet</div>
+                        <div class="card-title">💧 Demo Tokens</div>
+                        <span class="card-badge">Sepolia Only</span>
                     </div>
                     <div class="faucet-info">
                         <div class="faucet-status" id="faucetStatus">Connect wallet to check</div>
                         <div class="faucet-amount">10,000 VLFY</div>
                     </div>
-                    <button class="tier-btn" id="faucetBtn" onclick="claimFaucet()">Claim Testnet VLFY</button>
-                    <p style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem;">ℹ️ Claim once every 24 hours</p>
+                    <button class="tier-btn" id="faucetBtn" onclick="claimFaucet()">Claim Demo VLFY</button>
+                    <p style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem;">ℹ️ Testnet tokens for demo purposes only</p>
                 </div>
 
                 <div class="card" style="margin-top: 1.5rem;">
                     <div class="card-header">
-                        <div class="card-title">🔗 Discord Server</div>
-                        <span class="card-badge">Coming Soon</span>
+                        <div class="card-title">🔗 Community Integration</div>
+                        <span class="card-badge">Q1 2026</span>
                     </div>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Connect your Discord server to enable security monitoring.</p>
-                    <button class="tier-btn" onclick="showToast('Discord integration coming soon!', false)" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1);">Connect Discord (Admin Only)</button>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Connect your Discord or Telegram community to enable protocol protection.</p>
+                    <a href="index.html#early-access" class="tier-btn" style="display: block; text-align: center; text-decoration: none;">Request Early Access</a>
                 </div>
             </div>
         </div>
