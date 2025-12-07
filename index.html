@@ -748,6 +748,188 @@
             justify-content: center;
         }
 
+        /* Ecosystem Section */
+        #ecosystem {
+            background: linear-gradient(180deg, transparent, rgba(0, 212, 255, 0.05), transparent);
+        }
+
+        .ecosystem-timeline {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 3rem;
+        }
+
+        .ecosystem-timeline::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .ecosystem-phase {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding: 0 1rem;
+        }
+
+        .ecosystem-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--dark-card);
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .ecosystem-phase:nth-child(2) .ecosystem-icon {
+            border-color: var(--secondary);
+        }
+
+        .ecosystem-phase:nth-child(3) .ecosystem-icon {
+            border-color: var(--accent);
+        }
+
+        .ecosystem-phase:nth-child(4) .ecosystem-icon {
+            border-color: var(--accent-2);
+        }
+
+        .ecosystem-phase h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .ecosystem-phase .phase-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .ecosystem-phase:nth-child(2) .phase-label {
+            color: var(--secondary);
+        }
+
+        .ecosystem-phase:nth-child(3) .phase-label {
+            color: var(--accent);
+        }
+
+        .ecosystem-phase:nth-child(4) .phase-label {
+            color: var(--accent-2);
+        }
+
+        .ecosystem-phase p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .ecosystem-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .status-live {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--primary);
+        }
+
+        .status-building {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--secondary);
+        }
+
+        .status-planned {
+            background: rgba(102, 126, 234, 0.15);
+            color: var(--accent);
+        }
+
+        /* Early Access Section */
+        #early-access {
+            background: var(--dark-lighter);
+        }
+
+        .early-access-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .early-access-content h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .early-access-content p {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .early-access-benefits {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .early-access-benefits li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            color: var(--text);
+        }
+
+        .early-access-benefits li::before {
+            content: '◆';
+            color: var(--primary);
+            font-size: 0.6rem;
+        }
+
+        .early-access-form {
+            background: var(--dark-card);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .early-access-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .early-access-form h4 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .early-access-form > p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
         /* FAQ Section */
         #faq {
             background: var(--dark);
@@ -1047,6 +1229,282 @@
             color: var(--primary);
         }
 
+        /* Roadmap Section */
+        #roadmap {
+            background: linear-gradient(180deg, transparent, rgba(102, 126, 234, 0.05), transparent);
+        }
+
+        .roadmap-timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .roadmap-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary), var(--accent), var(--accent-2));
+        }
+
+        .roadmap-item {
+            display: flex;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .roadmap-item:nth-child(odd) {
+            flex-direction: row-reverse;
+        }
+
+        .roadmap-item:nth-child(odd) .roadmap-content {
+            text-align: right;
+            padding-right: 3rem;
+            padding-left: 0;
+        }
+
+        .roadmap-item:nth-child(even) .roadmap-content {
+            padding-left: 3rem;
+        }
+
+        .roadmap-content {
+            width: 50%;
+        }
+
+        .roadmap-marker {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--dark);
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .roadmap-item:nth-child(2) .roadmap-marker {
+            border-color: var(--secondary);
+        }
+
+        .roadmap-item:nth-child(3) .roadmap-marker {
+            border-color: var(--accent);
+        }
+
+        .roadmap-item:nth-child(4) .roadmap-marker {
+            border-color: var(--accent-2);
+        }
+
+        .roadmap-quarter {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .roadmap-item:nth-child(2) .roadmap-quarter {
+            color: var(--secondary);
+        }
+
+        .roadmap-item:nth-child(3) .roadmap-quarter {
+            color: var(--accent);
+        }
+
+        .roadmap-item:nth-child(4) .roadmap-quarter {
+            color: var(--accent-2);
+        }
+
+        .roadmap-phase {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .roadmap-summary {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+            font-style: italic;
+        }
+
+        .roadmap-items {
+            list-style: none;
+        }
+
+        .roadmap-items li {
+            color: var(--text);
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .roadmap-item:nth-child(odd) .roadmap-items li {
+            justify-content: flex-end;
+        }
+
+        .roadmap-items li::before {
+            content: '→';
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .roadmap-item:nth-child(odd) .roadmap-items li::before {
+            order: 2;
+            content: '←';
+        }
+
+        .roadmap-item:nth-child(2) .roadmap-items li::before {
+            color: var(--secondary);
+        }
+
+        .roadmap-item:nth-child(3) .roadmap-items li::before {
+            color: var(--accent);
+        }
+
+        .roadmap-item:nth-child(4) .roadmap-items li::before {
+            color: var(--accent-2);
+        }
+
+        /* White Paper Section */
+        #whitepaper {
+            background: var(--dark-lighter);
+        }
+
+        .whitepaper-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .whitepaper-content h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .whitepaper-content p {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .whitepaper-topics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .whitepaper-topic {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .whitepaper-topic::before {
+            content: '◆';
+            color: var(--primary);
+            font-size: 0.6rem;
+        }
+
+        .whitepaper-preview {
+            background: var(--dark-card);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .whitepaper-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .whitepaper-preview-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .whitepaper-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-dim);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+        }
+
+        .whitepaper-meta h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .whitepaper-meta span {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .whitepaper-toc {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .whitepaper-toc li {
+            padding: 0.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .whitepaper-toc li span {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary);
+            font-size: 0.8rem;
+        }
+
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            font-weight: 600;
+            padding: 0.875rem 1.75rem;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-download:hover {
+            box-shadow: var(--glow);
+            transform: translateY(-2px);
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .about-grid,
@@ -1064,6 +1522,10 @@
 
             .steps::before {
                 display: none;
+            }
+
+            .whitepaper-container {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -1128,6 +1590,76 @@
             .services-grid {
                 grid-template-columns: 1fr;
             }
+
+            .roadmap-timeline::before {
+                left: 10px;
+            }
+
+            .roadmap-item,
+            .roadmap-item:nth-child(odd) {
+                flex-direction: column;
+            }
+
+            .roadmap-content,
+            .roadmap-item:nth-child(odd) .roadmap-content {
+                width: 100%;
+                text-align: left;
+                padding-left: 2.5rem;
+                padding-right: 0;
+            }
+
+            .roadmap-marker {
+                left: 10px;
+            }
+
+            .roadmap-item:nth-child(odd) .roadmap-items li {
+                justify-content: flex-start;
+            }
+
+            .roadmap-item:nth-child(odd) .roadmap-items li::before {
+                order: 0;
+                content: '→';
+            }
+
+            .whitepaper-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .whitepaper-topics {
+                grid-template-columns: 1fr;
+            }
+
+            .ecosystem-timeline {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .ecosystem-timeline::before {
+                display: none;
+            }
+
+            .ecosystem-phase {
+                text-align: left;
+                padding: 0;
+                display: flex;
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .ecosystem-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+                flex-shrink: 0;
+                margin: 0;
+            }
+
+            .early-access-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
         }
     </style>
 </head>
@@ -1170,36 +1702,37 @@
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li class="dropdown">
-                    <a href="#services" class="dropdown-toggle">Services</a>
+                    <a href="#protocol" class="dropdown-toggle">Protocol</a>
                     <div class="dropdown-menu">
-                        <a href="#services">
+                        <a href="#protocol">
                             <div class="dropdown-icon">🔐</div>
                             <div>
                                 <strong>Multi-Sig Verification</strong>
-                                <small style="display:block; color:var(--text-muted);">Prevent fake link posts</small>
+                                <small style="display:block; color:var(--text-muted);">Cryptographic approval layer</small>
                             </div>
                         </a>
-                        <a href="#services">
-                            <div class="dropdown-icon">📊</div>
+                        <a href="#protocol">
+                            <div class="dropdown-icon">⛓️</div>
                             <div>
-                                <strong>Security Monitoring</strong>
-                                <small style="display:block; color:var(--text-muted);">Real-time threat detection</small>
+                                <strong>On-Chain Attestations</strong>
+                                <small style="display:block; color:var(--text-muted);">Immutable security records</small>
                             </div>
                         </a>
-                        <a href="#services">
-                            <div class="dropdown-icon">✅</div>
+                        <a href="#protocol">
+                            <div class="dropdown-icon">🌐</div>
                             <div>
-                                <strong>Project Audits</strong>
-                                <small style="display:block; color:var(--text-muted);">Trust scoring for NFT projects</small>
+                                <strong>Threat Intelligence</strong>
+                                <small style="display:block; color:var(--text-muted);">Cross-community defense</small>
                             </div>
                         </a>
                     </div>
                 </li>
-                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#ecosystem">Ecosystem</a></li>
+                <li><a href="#roadmap">Roadmap</a></li>
+                <li><a href="#whitepaper">White Paper</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#faq">FAQ</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="dashboard.html" class="nav-cta">Launch App</a></li>
+                <li><a href="#early-access" class="nav-cta">Request Access</a></li>
             </ul>
 
             <div class="mobile-toggle" onclick="toggleMobileMenu()">
@@ -1214,34 +1747,34 @@
     <section id="home" class="hero">
         <div class="hero-content">
             <div class="hero-badge">
-                <span>🧪</span>
-                <span>Currently in Beta on Sepolia Testnet</span>
+                <span>🔗</span>
+                <span>Protocol Launching Q1 2026</span>
             </div>
-            <h1>Protect Your Discord From <span>Compromised Admins</span></h1>
+            <h1>Verify Before <span>Publication</span></h1>
             <p class="hero-subtitle">
-                The first multi-signature link verification system for Discord. 
-                Stop fake mint links before they're posted — not after the damage is done.
+                The security layer Web3 never had. Multi-signature verification for community announcements, 
+                on-chain attestations, and cross-platform threat intelligence. Stop attacks at the source.
             </p>
             <div class="hero-buttons">
-                <a href="dashboard.html" class="btn btn-primary">
-                    🚀 Launch Dashboard
+                <a href="#early-access" class="btn btn-primary">
+                    Request Early Access
                 </a>
-                <a href="#how-it-works" class="btn btn-secondary">
-                    Learn How It Works
+                <a href="#whitepaper" class="btn btn-secondary">
+                    Read White Paper
                 </a>
             </div>
             <div class="hero-stats">
                 <div class="stat">
-                    <div class="stat-value">$2B+</div>
-                    <div class="stat-label">Lost to Discord Hacks</div>
+                    <div class="stat-value">$2.5B</div>
+                    <div class="stat-label">Web3 Losses in 2024</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-value">78%</div>
-                    <div class="stat-label">Happen During Mints</div>
+                    <div class="stat-value">$494M</div>
+                    <div class="stat-label">Phishing Attacks Alone</div>
                 </div>
                 <div class="stat">
                     <div class="stat-value">0</div>
-                    <div class="stat-label">Direct Competitors</div>
+                    <div class="stat-label">Proactive Solutions Exist</div>
                 </div>
             </div>
         </div>
@@ -1252,83 +1785,83 @@
         <div class="section-container">
             <div class="section-header">
                 <div class="section-label">The Problem</div>
-                <h2 class="section-title">Discord Security is Broken</h2>
+                <h2 class="section-title">Web3 Communities Are Under Attack</h2>
                 <p class="section-subtitle">
-                    One compromised admin account can destroy an entire community in minutes.
+                    Every solution detects threats after publication. By then, wallets are already drained.
                 </p>
             </div>
 
             <div class="problem-grid">
                 <div class="problem-card">
                     <div class="problem-icon">💀</div>
-                    <div class="problem-stat">$2B+</div>
-                    <h3>Lost Annually</h3>
-                    <p>Web3 communities lose billions each year to Discord-based phishing attacks and compromised admin accounts.</p>
+                    <div class="problem-stat">$494M</div>
+                    <h3>Phishing in 2024</h3>
+                    <p>A 67% increase year-over-year. Attackers are winning because defenses are fundamentally reactive.</p>
                 </div>
                 <div class="problem-card">
                     <div class="problem-icon">🎯</div>
-                    <h3>Admin Account Takeover</h3>
-                    <p>Hackers target admin accounts with phishing, SIM swaps, and malware. One compromised account = full server access.</p>
+                    <h3>The Attack Pattern</h3>
+                    <p>Compromise one admin account. Post one malicious link. Drain hundreds of wallets. Current tools detect nothing until it's over.</p>
                 </div>
                 <div class="problem-card">
                     <div class="problem-icon">⚡</div>
-                    <h3>Fake Mint Links</h3>
-                    <p>Attackers post malicious mint links in announcements. By the time mods react, wallets are already drained.</p>
+                    <h3>Blocklists Don't Work</h3>
+                    <p>Attackers generate fresh domains for each attack. By definition, new phishing links aren't on any blocklist.</p>
                 </div>
                 <div class="problem-card">
                     <div class="problem-icon">🔓</div>
-                    <h3>No Accountability</h3>
-                    <p>Discord's audit logs are easily manipulated. There's no immutable proof of who posted what and when.</p>
+                    <h3>Isolated Defenses</h3>
+                    <p>When one community is attacked, thousands remain unaware. Threat intelligence dies with each incident.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section id="services">
+    <!-- Protocol Section -->
+    <section id="protocol">
         <div class="section-container">
             <div class="section-header">
-                <div class="section-label">Our Services</div>
-                <h2 class="section-title">Complete Discord Security Suite</h2>
+                <div class="section-label">Core Protocol</div>
+                <h2 class="section-title">Three Layers of Defense</h2>
                 <p class="section-subtitle">
-                    Prevention-first security designed specifically for Web3 communities.
+                    Not a product. Infrastructure. The verification layer Web3 communities build on.
                 </p>
             </div>
 
             <div class="services-grid">
                 <div class="service-card">
                     <div class="service-icon">🔐</div>
-                    <h3>Multi-Signature Link Verification</h3>
-                    <p>Require multiple admins to approve any link before it's posted. Like a multi-sig wallet, but for your Discord announcements.</p>
+                    <h3>Multi-Signature Verification</h3>
+                    <p>Cryptographic approval from multiple administrators before any link-containing announcement is published. A single compromised account can never authorize malicious content.</p>
                     <ul class="service-features">
-                        <li>Configurable thresholds (e.g., 3 of 5 admins)</li>
-                        <li>Time-limited approval windows (30-60 seconds)</li>
-                        <li>Unique verification codes via DM</li>
-                        <li>Blockchain-recorded audit trail</li>
+                        <li>Configurable approval thresholds</li>
+                        <li>Time-limited verification windows</li>
+                        <li>Unique cryptographic codes per approver</li>
+                        <li>Urgency is the red flag—friction is the feature</li>
                     </ul>
                 </div>
 
                 <div class="service-card">
-                    <div class="service-icon">📊</div>
-                    <h3>Real-Time Security Monitoring</h3>
-                    <p>24/7 monitoring of your Discord server for suspicious activity, with instant alerts to your admin team.</p>
+                    <div class="service-icon">⛓️</div>
+                    <h3>On-Chain Attestation Layer</h3>
+                    <p>Every security event recorded on Ethereum. Immutable proof of approvals, rejections, and detected threats. The data substrate for cross-community intelligence.</p>
                     <ul class="service-features">
-                        <li>Role and permission change alerts</li>
-                        <li>Bot add/remove notifications</li>
-                        <li>Webhook creation monitoring</li>
-                        <li>Suspicious link detection</li>
+                        <li>Verifiable security history via EAS</li>
+                        <li>Privacy-preserving hashed identifiers</li>
+                        <li>AI training data for pattern recognition</li>
+                        <li>Dispute resolution evidence</li>
                     </ul>
                 </div>
 
                 <div class="service-card">
-                    <div class="service-icon">✅</div>
-                    <h3>Project Trust Audits</h3>
-                    <p>Comprehensive security audits for NFT projects with a 0-100 trust score that builds investor confidence.</p>
+                    <div class="service-icon">🌐</div>
+                    <h3>Threat Intelligence Network</h3>
+                    <p>When one community encounters a threat, every community is protected. Shared defense that gets stronger with each participant. The immune system Web3 never had.</p>
                     <ul class="service-features">
-                        <li>Team transparency verification</li>
-                        <li>Community health analysis</li>
-                        <li>Technical foundation review</li>
-                        <li>Public trust badge display</li>
+                        <li>Real-time cross-community alerts</li>
+                        <li>Behavioral pattern recognition</li>
+                        <li>Predictive risk scoring</li>
+                        <li>Network effects: more data = better defense</li>
                     </ul>
                 </div>
             </div>
@@ -1340,9 +1873,9 @@
         <div class="section-container">
             <div class="section-header">
                 <div class="section-label">How It Works</div>
-                <h2 class="section-title">Security in 4 Simple Steps</h2>
+                <h2 class="section-title">The Verification Flow</h2>
                 <p class="section-subtitle">
-                    Set up in minutes, protected for life.
+                    From submission to publication. Every step verified, every action recorded.
                 </p>
             </div>
 
@@ -1350,105 +1883,141 @@
                 <div class="step">
                     <div class="step-number">1</div>
                     <div class="step-content">
-                        <h3>Connect Your Wallet</h3>
-                        <p>Link your wallet to activate your subscription. All payments use VLFY tokens on Ethereum for transparent, verifiable transactions.</p>
+                        <h3>Admin Submits Announcement</h3>
+                        <p>An administrator attempts to post a link-containing message to a protected channel. Validify intercepts and holds the content.</p>
                     </div>
                 </div>
 
                 <div class="step">
                     <div class="step-number">2</div>
                     <div class="step-content">
-                        <h3>Add Validify Bot to Your Server</h3>
-                        <p>Invite our Discord bot with minimal permissions. We only request what's needed for security monitoring — no admin access required.</p>
+                        <h3>Approvers Notified</h3>
+                        <p>Designated approvers receive the message preview and a unique cryptographic verification code. Each code is single-use and time-limited.</p>
                     </div>
                 </div>
 
                 <div class="step">
                     <div class="step-number">3</div>
                     <div class="step-content">
-                        <h3>Register Your Admin Team</h3>
-                        <p>Add your trusted admins to the multi-sig verification system. Set your approval threshold (e.g., 3 of 5 must approve).</p>
+                        <h3>Threshold Reached</h3>
+                        <p>Once the configured number of approvers submit their codes (e.g., 3 of 5), the verification threshold is satisfied. If the window expires, the message is rejected.</p>
                     </div>
                 </div>
 
                 <div class="step">
                     <div class="step-number">4</div>
                     <div class="step-content">
-                        <h3>Post Links Securely</h3>
-                        <p>When posting important links, use /validify post-link. All registered admins receive unique approval codes. Link only posts after threshold is met.</p>
+                        <h3>Published & Attested</h3>
+                        <p>The verified message is published with a Validify badge. Approval signatures are recorded on-chain, creating an immutable audit trail.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Pricing Section -->
-    <section id="pricing">
+    <!-- Ecosystem Section -->
+    <section id="ecosystem">
         <div class="section-container">
             <div class="section-header">
-                <div class="section-label">Pricing</div>
-                <h2 class="section-title">Choose Your Protection Level</h2>
+                <div class="section-label">Ecosystem</div>
+                <h2 class="section-title">Beyond Discord</h2>
                 <p class="section-subtitle">
-                    Flexible plans for communities of all sizes. Pay with VLFY tokens.
+                    Discord is where we start. It's not where we stop. The Validify protocol expands to protect Web3 communication everywhere.
                 </p>
             </div>
 
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <div class="pricing-tier">Starter</div>
-                    <div class="pricing-name">Basic</div>
-                    <div class="pricing-price">
-                        <span class="pricing-amount">$50</span>
-                        <span class="pricing-period">/month</span>
-                    </div>
-                    <div class="pricing-vlfy">500 VLFY tokens</div>
-                    <ul class="pricing-features">
-                        <li>Single server protection</li>
-                        <li>Role/permission change alerts</li>
-                        <li>Bot add/remove monitoring</li>
-                        <li>Webhook creation alerts</li>
-                        <li>Suspicious link warnings</li>
-                        <li>Email support</li>
-                    </ul>
-                    <a href="dashboard.html" class="btn btn-secondary pricing-cta">Get Started</a>
+            <div class="ecosystem-timeline">
+                <div class="ecosystem-phase">
+                    <div class="ecosystem-icon">💬</div>
+                    <div class="phase-label">PHASE 1</div>
+                    <h3>Discord Integration</h3>
+                    <p>Multi-sig verification, admin monitoring, and threat detection for Discord servers.</p>
+                    <span class="ecosystem-status status-building">Building Now</span>
                 </div>
 
-                <div class="pricing-card featured">
-                    <div class="pricing-tier">Most Popular</div>
-                    <div class="pricing-name">Advanced</div>
-                    <div class="pricing-price">
-                        <span class="pricing-amount">$150</span>
-                        <span class="pricing-period">/month</span>
-                    </div>
-                    <div class="pricing-vlfy">1,500 VLFY tokens</div>
-                    <ul class="pricing-features">
-                        <li>Everything in Basic, plus:</li>
-                        <li>Multi-sig link verification</li>
-                        <li>DM phishing protection</li>
-                        <li>Mod impersonation alerts</li>
-                        <li>Priority notifications</li>
-                        <li>Priority support</li>
-                    </ul>
-                    <a href="dashboard.html" class="btn btn-primary pricing-cta">Get Started</a>
+                <div class="ecosystem-phase">
+                    <div class="ecosystem-icon">✈️</div>
+                    <div class="phase-label">PHASE 2</div>
+                    <h3>Telegram Expansion</h3>
+                    <p>Protocol extension to Telegram groups and channels. Same security model, new platform.</p>
+                    <span class="ecosystem-status status-planned">Q2 2026</span>
                 </div>
 
-                <div class="pricing-card">
-                    <div class="pricing-tier">Enterprise</div>
-                    <div class="pricing-name">Pro</div>
-                    <div class="pricing-price">
-                        <span class="pricing-amount">$500</span>
-                        <span class="pricing-period">/month</span>
-                    </div>
-                    <div class="pricing-vlfy">5,000 VLFY tokens</div>
-                    <ul class="pricing-features">
-                        <li>Everything in Advanced, plus:</li>
-                        <li>Multi-server dashboard</li>
-                        <li>Advanced analytics & reporting</li>
-                        <li>Incident timeline exports</li>
-                        <li>Custom response playbooks</li>
-                        <li>Dedicated support manager</li>
+                <div class="ecosystem-phase">
+                    <div class="ecosystem-icon">🔌</div>
+                    <div class="phase-label">PHASE 3</div>
+                    <h3>Public API & SDK</h3>
+                    <p>Open infrastructure for third-party integrations. Any platform can implement Validify verification.</p>
+                    <span class="ecosystem-status status-planned">Q3 2026</span>
+                </div>
+
+                <div class="ecosystem-phase">
+                    <div class="ecosystem-icon">🤖</div>
+                    <div class="phase-label">PHASE 4</div>
+                    <h3>Predictive Intelligence</h3>
+                    <p>AI-driven anomaly detection. Pattern recognition across the entire network. Predict attacks before they happen.</p>
+                    <span class="ecosystem-status status-planned">Q4 2026</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Early Access Section -->
+    <section id="early-access">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">Join the Protocol</div>
+                <h2 class="section-title">Request Early Access</h2>
+                <p class="section-subtitle">
+                    We're onboarding founding communities for Q1 2026 launch.
+                </p>
+            </div>
+
+            <div class="early-access-container">
+                <div class="early-access-content">
+                    <h3>Founding Community Benefits</h3>
+                    <p>
+                        Early access communities shape the protocol. Your feedback directly influences development priorities, 
+                        and you'll be protected from day one of mainnet launch.
+                    </p>
+                    
+                    <ul class="early-access-benefits">
+                        <li>Priority onboarding when protocol launches</li>
+                        <li>Direct input on feature development</li>
+                        <li>Founding community badge and recognition</li>
+                        <li>Extended free protection period</li>
+                        <li>Private channel with core team</li>
+                        <li>Early access to new integrations</li>
                     </ul>
-                    <a href="dashboard.html" class="btn btn-secondary pricing-cta">Contact Sales</a>
+                </div>
+
+                <div class="early-access-form">
+                    <h4>Apply for Early Access</h4>
+                    <p>Tell us about your community. We're prioritizing active Web3 projects with real security needs.</p>
+                    
+                    <form id="earlyAccessForm">
+                        <div class="form-group">
+                            <label for="projectName">Project / Community Name</label>
+                            <input type="text" id="projectName" name="projectName" placeholder="Your project name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="discordSize">Discord Community Size</label>
+                            <input type="text" id="discordSize" name="discordSize" placeholder="e.g., 5,000 members">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Contact Email</label>
+                            <input type="email" id="contactEmail" name="contactEmail" placeholder="you@project.xyz" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="projectType">Project Type</label>
+                            <input type="text" id="projectType" name="projectType" placeholder="NFT, DeFi, DAO, Gaming, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label for="securityNeeds">Why do you need Validify?</label>
+                            <textarea id="securityNeeds" name="securityNeeds" placeholder="Tell us about your security concerns or past incidents..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Application</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -1578,6 +2147,163 @@
         </div>
     </section>
 
+    <!-- Roadmap Section -->
+    <section id="roadmap">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">Roadmap</div>
+                <h2 class="section-title">2026 Protocol Development</h2>
+                <p class="section-subtitle">
+                    From foundation to prediction. Building the security infrastructure Web3 needs.
+                </p>
+            </div>
+
+            <div class="roadmap-timeline">
+                <!-- Q1 -->
+                <div class="roadmap-item">
+                    <div class="roadmap-content">
+                        <div class="roadmap-quarter">Q1 2026</div>
+                        <h3 class="roadmap-phase">Foundation</h3>
+                        <p class="roadmap-summary">
+                            Every day, Web3 communities lose funds to a preventable attack: a trusted admin posting a malicious link. 
+                            Current solutions detect after the damage is done. Validify starts where others fail—verifying before publication. 
+                            This is the foundation for a new security standard.
+                        </p>
+                        <ul class="roadmap-items">
+                            <li>Deploy multi-signature verification protocol to Ethereum mainnet</li>
+                            <li>Launch initial Discord integration with admin action monitoring</li>
+                            <li>Complete third-party smart contract security audit</li>
+                            <li>Launch public onboarding for early-access communities</li>
+                        </ul>
+                    </div>
+                    <div class="roadmap-marker"></div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="roadmap-item">
+                    <div class="roadmap-content">
+                        <div class="roadmap-quarter">Q2 2026</div>
+                        <h3 class="roadmap-phase">Intelligence</h3>
+                        <p class="roadmap-summary">
+                            Isolated communities are vulnerable. When a phishing domain hits one server, thousands remain unaware. 
+                            Validify ends fragmentation. We're building the shared immune system Web3 never had—every threat encountered 
+                            becomes protection for the entire network.
+                        </p>
+                        <ul class="roadmap-items">
+                            <li>Activate cross-community threat intelligence network</li>
+                            <li>Implement behavioral pattern tracking and baseline analysis</li>
+                            <li>Launch on-chain attestation layer for verifiable security events</li>
+                            <li>Expand protocol to Telegram ecosystem</li>
+                        </ul>
+                    </div>
+                    <div class="roadmap-marker"></div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="roadmap-item">
+                    <div class="roadmap-content">
+                        <div class="roadmap-quarter">Q3 2026</div>
+                        <h3 class="roadmap-phase">Expansion</h3>
+                        <p class="roadmap-summary">
+                            A Discord bot protects a server. A protocol protects an ecosystem. Validify evolves from application to 
+                            infrastructure—opening our security layer to any platform, any integration, any community that refuses 
+                            to accept preventable losses.
+                        </p>
+                        <ul class="roadmap-items">
+                            <li>Release public API and developer SDK for third-party integrations</li>
+                            <li>Launch Project Trust Score with on-chain verification badges</li>
+                            <li>Establish security researcher and white-hat partnership program</li>
+                            <li>Complete first third-party platform integration beyond Discord/Telegram</li>
+                        </ul>
+                    </div>
+                    <div class="roadmap-marker"></div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="roadmap-item">
+                    <div class="roadmap-content">
+                        <div class="roadmap-quarter">Q4 2026</div>
+                        <h3 class="roadmap-phase">Prediction</h3>
+                        <p class="roadmap-summary">
+                            The most dangerous attack is the one you don't see coming. Validify's on-chain data substrate powers 
+                            predictive security—pattern recognition trained on every threat our network encounters. 
+                            Don't just respond to attacks. Identify them before execution.
+                        </p>
+                        <ul class="roadmap-items">
+                            <li>Deploy AI-driven anomaly detection for pre-attack behavior patterns</li>
+                            <li>Introduce predictive risk scoring for pending announcements</li>
+                            <li>Launch DAO governance for threat classification and protocol standards</li>
+                            <li>Publish 2027 roadmap including token utility framework</li>
+                        </ul>
+                    </div>
+                    <div class="roadmap-marker"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- White Paper Section -->
+    <section id="whitepaper">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">Documentation</div>
+                <h2 class="section-title">White Paper</h2>
+                <p class="section-subtitle">
+                    Deep dive into the Validify protocol architecture, threat model, and vision.
+                </p>
+            </div>
+
+            <div class="whitepaper-container">
+                <div class="whitepaper-content">
+                    <h3>Protocol Architecture & Vision</h3>
+                    <p>
+                        The Validify white paper details our multi-signature verification system, on-chain attestation layer, 
+                        and cross-community threat intelligence network. Understand how we're building the security infrastructure 
+                        Web3 communities deserve.
+                    </p>
+                    <p>
+                        From the fundamental problem of compromised admin accounts to our predictive security roadmap, 
+                        this document covers everything you need to evaluate and implement Validify protection.
+                    </p>
+                    
+                    <div class="whitepaper-topics">
+                        <div class="whitepaper-topic">Multi-Sig Verification System</div>
+                        <div class="whitepaper-topic">On-Chain Attestation Layer</div>
+                        <div class="whitepaper-topic">Threat Intelligence Network</div>
+                        <div class="whitepaper-topic">Protocol Economics</div>
+                        <div class="whitepaper-topic">Security Architecture</div>
+                        <div class="whitepaper-topic">Governance Framework</div>
+                    </div>
+                </div>
+
+                <div class="whitepaper-preview">
+                    <div class="whitepaper-preview-header">
+                        <div class="whitepaper-icon">📄</div>
+                        <div class="whitepaper-meta">
+                            <h4>Validify White Paper v1.0</h4>
+                            <span>PDF • Updated December 2025</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="whitepaper-toc">
+                        <li><span>01</span> Executive Summary</li>
+                        <li><span>02</span> The Problem: Compromised Trust</li>
+                        <li><span>03</span> Multi-Signature Verification Protocol</li>
+                        <li><span>04</span> On-Chain Security Attestations</li>
+                        <li><span>05</span> Cross-Community Intelligence</li>
+                        <li><span>06</span> Technical Architecture</li>
+                        <li><span>07</span> Token Utility & Economics</li>
+                        <li><span>08</span> Roadmap & Governance</li>
+                    </ul>
+                    
+                    <a href="Validify_White_Paper.pdf" class="btn-download" target="_blank">
+                        <span>📥</span> Download White Paper
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
     <section id="contact">
         <div class="section-container">
@@ -1679,28 +2405,39 @@
                     <span class="logo-text">VALIDIFY</span>
                 </a>
                 <p>
-                    The first multi-signature link verification system for Discord. 
-                    Protecting Web3 communities from compromised admin accounts.
+                    The security layer Web3 never had. Multi-signature verification, 
+                    on-chain attestations, and cross-community threat intelligence.
                 </p>
             </div>
 
             <div class="footer-column">
-                <h4>Product</h4>
+                <h4>Protocol</h4>
                 <ul class="footer-links">
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#pricing">Pricing</a></li>
-                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="#protocol">Core Protocol</a></li>
+                    <li><a href="#ecosystem">Ecosystem</a></li>
+                    <li><a href="#roadmap">Roadmap</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
                     <li><a href="#faq">FAQ</a></li>
                 </ul>
             </div>
 
             <div class="footer-column">
-                <h4>Company</h4>
+                <h4>Resources</h4>
                 <ul class="footer-links">
+                    <li><a href="#whitepaper">White Paper</a></li>
+                    <li><a href="Validify_White_Paper.pdf" target="_blank">Download PDF</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">API Reference</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Community</h4>
+                <ul class="footer-links">
+                    <li><a href="#early-access">Request Access</a></li>
                     <li><a href="#about">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Blog</a></li>
                     <li><a href="#contact">Contact</a></li>
+                    <li><a href="https://discord.gg/validify" target="_blank">Discord</a></li>
                 </ul>
             </div>
 
@@ -1715,7 +2452,7 @@
         </div>
 
         <div class="footer-bottom">
-            <p>© 2025 Validify. All rights reserved. Currently in Beta on Sepolia Testnet.</p>
+            <p>© 2025 Validify Protocol. Launching Q1 2026.</p>
             <div class="footer-socials">
                 <a href="https://discord.gg/validify" target="_blank" title="Discord">💬</a>
                 <a href="https://twitter.com/validifyprotocol" target="_blank" title="Twitter">🐦</a>
@@ -1774,4 +2511,18 @@
         });
 
         // Contact form submission
-        document.getElementById('contactForm').addEventListener('submit
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We\'ll be in touch soon.');
+            this.reset();
+        });
+
+        // Early access form submission
+        document.getElementById('earlyAccessForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Application submitted! We\'ll review your community and be in touch soon.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
