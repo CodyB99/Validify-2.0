@@ -1,1 +1,27 @@
+{
+  "ALERT_CHANNEL_ID": "PASTE_ALERT_CHANNEL_ID",
+  "SUSPICIOUS_KEYWORDS": [
+    "airdrop",
+    "claim",
+    "mint now",
+    "verify",
+    "urgent",
+    "free"
+  ],
+  "SUSPICIOUS_DOMAINS": [
+    "bit.ly",
+    "tinyurl.com",
+    "goo.gl",
+    "t.co"
+  ],
+  "ALLOWLIST_DOMAINS": [
+    "discord.com",
+    "discord.gg",
+    "github.com"
+  ],
+  "ENABLE_ROLE_ALERTS": true,
+  "ENABLE_BOT_ADD_ALERTS": true,
+  "ENABLE_WEBHOOK_ALERTS": true,
+  "ENABLE_LINK_ALERTS": true
+}
 
