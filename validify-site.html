@@ -3,801 +3,1733 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validify: Discord Security Prototype (Testnet)</title>
-    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <title>Validify | Web3 Discord Security Protocol</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #00ff88;
+            --primary-dim: rgba(0, 255, 136, 0.15);
+            --secondary: #00d4ff;
+            --accent: #667eea;
+            --accent-2: #764ba2;
+            --dark: #0a0a0f;
+            --dark-card: rgba(10, 10, 15, 0.85);
+            --dark-lighter: #12121a;
+            --text: #ffffff;
+            --text-muted: #a0a0b0;
+            --danger: #ff4757;
+            --warning: #ffa502;
+            --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --gradient-dark: linear-gradient(180deg, #0a0a0f 0%, #1a1a2e 100%);
+            --glow: 0 0 40px rgba(0, 255, 136, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--gradient-dark);
+            color: var(--text);
             min-height: 100vh;
+            overflow-x: hidden;
         }
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        header {
-            text-align: center;
-            padding: 30px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 20px;
-            margin-bottom: 30px;
-            border: 3px solid #00ff88;
-        }
-        h1 {
-            font-size: 3em;
-            background: linear-gradient(45deg, #00ff88, #00d4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-        .badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            padding: 8px 16px;
-            border-radius: 20px;
-            margin: 5px;
-            font-size: 0.85em;
-            border: 1px solid #00ff88;
-        }
-        .wallet-btn {
-            background: linear-gradient(135deg, #00ff88, #00d4ff);
-            color: #000;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 1.1em;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .wallet-btn:hover { transform: scale(1.05); }
-        .wallet-info {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            border: 2px solid #00ff88;
-            margin-top: 20px;
-            display: none;
-        }
-        .wallet-info.show { display: block; }
-        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-        .panel {
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid #00ff88;
-            border-radius: 15px;
-            padding: 25px;
-        }
-        .panel h2 { color: #00ff88; margin-bottom: 20px; border-bottom: 2px solid #00ff88; padding-bottom: 10px; }
-        .service-card {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
-            border: 3px solid #667eea;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 15px 0;
-        }
-        .btn {
-            background: linear-gradient(135deg, #00ff88, #00d4ff);
-            color: #000;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            margin: 10px 0;
-        }
-        .btn:hover:not(:disabled) { transform: scale(1.02); }
-        .btn:disabled { background: #555; cursor: not-allowed; opacity: 0.5; }
-        .stat-box {
-            background: rgba(0, 255, 136, 0.1);
-            border: 2px solid #00ff88;
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            margin: 10px 0;
-        }
-        .stat-label { font-size: 0.9em; color: #00d4ff; }
-        .stat-value { font-size: 2em; font-weight: bold; color: #00ff88; margin-top: 5px; }
-        .contract-address {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85em;
-            word-break: break-all;
-            margin: 10px 0;
-            border: 1px solid #00ff88;
-        }
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 255, 136, 0.95);
-            color: #000;
-            padding: 15px 25px;
-            border-radius: 10px;
-            font-weight: bold;
-            display: none;
-            z-index: 1000;
-        }
-        .toast.show { display: block; }
-        .toast.error { background: rgba(255, 68, 68, 0.95); color: white; }
-        .modal {
+
+        /* Animated Background */
+        .bg-grid {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-orb-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--accent);
+            top: -200px;
+            right: -200px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-2);
+            bottom: -100px;
+            left: -100px;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 0.75rem 2rem;
+            background: rgba(10, 10, 15, 0.95);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 999;
+            font-size: 1.25rem;
         }
-        .modal.show { display: flex; }
-        .modal-content {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            padding: 40px;
-            border-radius: 20px;
-            border: 3px solid #00ff88;
+
+        .logo-text {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+            background: var(--primary-dim);
+        }
+
+        /* Dropdown */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .dropdown-toggle::after {
+            content: 'â–¼';
+            font-size: 0.6rem;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown:hover .dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 220px;
+            background: var(--dark-card);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            padding: 0.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(5px);
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            color: var(--text-muted);
+        }
+
+        .dropdown-menu a:hover {
+            background: var(--primary-dim);
+            color: var(--primary);
+        }
+
+        .dropdown-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-dim);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--dark) !important;
+            font-weight: 600 !important;
+            padding: 0.6rem 1.25rem !important;
+        }
+
+        .nav-cta:hover {
+            box-shadow: var(--glow);
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Menu */
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 900px;
             text-align: center;
         }
-        .spinner {
-            border: 5px solid rgba(255, 255, 255, 0.3);
-            border-top: 5px solid #00ff88;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary-dim);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            animation: pulse 2s ease-in-out infinite;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
         }
-                .feed-list {
-            margin-top: 10px;
-            max-height: 260px;
-            overflow-y: auto;
-            padding-right: 6px;
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
         }
-        .feed-item {
-            background: rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(0, 255, 136, 0.35);
-            border-radius: 10px;
-            padding: 12px;
-            margin: 8px 0;
+
+        .hero h1 span {
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .feed-title {
-            color: #00d4ff;
-            font-size: 0.98em;
-            margin-bottom: 6px;
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.6;
         }
-        .feed-meta {
-            color: #bbb;
-            font-size: 0.82em;
+
+        .hero-buttons {
             display: flex;
-            gap: 10px;
+            gap: 1rem;
+            justify-content: center;
             flex-wrap: wrap;
         }
-        .feed-link {
-            color: #00ff88;
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
             text-decoration: none;
-            font-size: 0.85em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
         }
-        .feed-link:hover {
-            text-decoration: underline;
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--dark);
         }
-        @media (max-width: 1024px) { .grid { grid-template-columns: 1fr; } }
+
+        .btn-primary:hover {
+            box-shadow: var(--glow);
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: var(--primary-dim);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Sections */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 6rem 2rem;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Problem Section */
+        #problem {
+            background: linear-gradient(180deg, transparent, rgba(255, 71, 87, 0.05), transparent);
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .problem-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(255, 71, 87, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--danger);
+            box-shadow: 0 20px 40px rgba(255, 71, 87, 0.1);
+        }
+
+        .problem-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 71, 87, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .problem-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: var(--danger);
+        }
+
+        .problem-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .problem-stat {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--danger);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Services Section */
+        #services {
+            background: linear-gradient(180deg, transparent, rgba(0, 255, 136, 0.03), transparent);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 25px 50px rgba(0, 255, 136, 0.1);
+        }
+
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--primary-dim);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-features {
+            list-style: none;
+        }
+
+        .service-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .service-features li::before {
+            content: 'âœ“';
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* How It Works */
+        #how-it-works {
+            background: var(--dark-lighter);
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 60px;
+            bottom: 60px;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .step {
+            display: flex;
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            min-width: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .step-content p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Pricing Section */
+        #pricing {
+            background: linear-gradient(180deg, var(--dark-lighter), var(--dark));
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            align-items: stretch;
+        }
+
+        .pricing-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .pricing-card.featured::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.02) translateY(-5px);
+        }
+
+        .pricing-tier {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-name {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-price {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-amount {
+            font-size: 3rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .pricing-period {
+            color: var(--text-muted);
+        }
+
+        .pricing-vlfy {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-features li::before {
+            content: 'âœ“';
+            color: var(--primary);
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        .pricing-cta {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* FAQ Section */
+        #faq {
+            background: var(--dark);
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .faq-item {
+            background: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.open .faq-question::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer-content {
+            padding: 0 1.5rem 1.5rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* About Section */
+        #about {
+            background: linear-gradient(180deg, var(--dark), var(--dark-lighter));
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-content h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-content p {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-values {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .value-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .value-card h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .value-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Contact Section */
+        #contact {
+            background: var(--dark-lighter);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .contact-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .contact-method:hover {
+            border-color: var(--primary);
+            background: var(--primary-dim);
+        }
+
+        .contact-method-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--primary-dim);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .contact-form {
+            background: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: var(--dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-dim);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4rem 2rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-top: 1rem;
+            max-width: 300px;
+        }
+
+        .footer-column h4 {
+            color: var(--text);
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-bottom p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-socials a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-socials a:hover {
+            background: var(--primary-dim);
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .about-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps::before {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: var(--dark);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .nav-links.open {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .mobile-toggle {
+                display: flex;
+            }
+
+            .dropdown-menu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                background: transparent;
+                border: none;
+                padding: 0 0 0 1rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+
+            .pricing-card.featured:hover {
+                transform: translateY(-5px);
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .about-values {
+                grid-template-columns: 1fr;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="toast" id="toast"></div>
-    <div class="modal" id="modal">
-        <div class="modal-content">
-            <h2 style="color: #00ff88;">Processing Transaction</h2>
-            <div class="spinner"></div>
-            <p id="modalText">Please wait...</p>
-        </div>
-    </div>
+    <!-- Background Effects -->
+    <div class="bg-grid"></div>
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
 
-    <div class="container">
-        <header>
-            <h1>🛡️ VALIDIFY</h1>
-            <p style="font-size: 1.2em; color: #00d4ff; margin: 10px 0;">
-                Discord Threat Prevention + Verification (Prototype)
-            </p>
-            <div>
-                <span class="badge">🧪 Testnet Prototype (Sepolia)</span>
-                <span class="badge">🔍 Subscription + Access Layer</span>
-                <span class="badge">🛠 Security Engine In Progress</span>
-            </div>
-            <p style="color: #bbb; font-size: 0.95em; margin-top: 12px;">
-                This page is for concept testing. VLFY is a testnet access token used to validate subscription flows.
-            </p>
-            <div style="margin-top: 14px;">
-                <a class="wallet-btn" href="trust.html" style="text-decoration:none; display:inline-block;">
-                    ✅ Trust & Safety (Prototype)
-                </a>
-            </div>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#home" class="logo">
+                <div class="logo-icon">ðŸ›¡ï¸</div>
+                <span class="logo-text">VALIDIFY</span>
+            </a>
 
-                <button class="wallet-btn" id="connectBtn" onclick="connectWallet()">🦊 Connect MetaMask</button>
-            
-            <div class="wallet-info" id="walletInfo">
-                <div style="color: #00ff88; font-family: monospace; font-size: 1.1em; margin-bottom: 15px;" id="address"></div>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-                    <div class="stat-box">
-                        <div class="stat-label">ETH</div>
-                        <div class="stat-value" style="font-size: 1.5em;" id="ethBal">0</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">VLFY</div>
-                        <div class="stat-value" style="font-size: 1.5em;" id="vlfyBal">0</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Activity (24h)</div>
-                        <div class="stat-value" style="font-size: 1.5em;" id="services">0</div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <div class="grid">
-            <div>
-                <div class="panel">
-                    <h2>🔐 Security Services</h2>
-
-                    <p style="color:#ccc; margin-bottom: 15px;">
-                        Validify is testing an on-chain subscription layer that will unlock off-chain Discord protections
-                        delivered by a bot and monitoring system. This is an early prototype on Sepolia.
-                    </p>
-
-                    
-                    <div class="service-card">
-                        <h3 style="color: #00d4ff; margin-bottom: 10px;">⚡ BASIC - 500 VLFY/month</h3>
-                        <p style="color:#aaa; font-size:0.9em; margin-top: 10px;">
-                            Safety note: Validify will never ask for your seed phrase. Wallet verification uses signature-only flows.
-                        </p>
-                        
-                        <ul style="color:#ccc; margin-bottom: 15px; padding-left: 18px;">
-                            <li>Role/permission change alerts</li>
-                            <li>Bot add/remove alerts</li>
-                            <li>New webhook alerts</li>
-                            <li>Suspicious link warnings</li>
-                        </ul>
-
-                        <button class="btn" onclick="activateService(1)" id="btn1">Activate Basic</button>
-                    </div>
-
-                    <div class="service-card">
-                        <h3 style="color: #00d4ff; margin-bottom: 10px;">🚀 ADVANCED - 1,500 VLFY (test cycle)</h3>
-                        <p style="color:#aaa; font-size:0.9em; margin-top: 10px;">
-                            Safety note: Validify will never ask for your seed phrase. Wallet verification uses signature-only flows.
-                        </p>
-                        
-                       <ul style="color:#ccc; margin-bottom: 15px; padding-left: 18px;">
-                            <li>Wallet verification via signature (no seed phrases)</li>
-                            <li>Verified domain and link warning banners</li>
-                            <li>Mod impersonation heuristic alerts</li>
-                            <li>Priority suspicious activity notifications</li>
-                       </ul>
-
-                        <button class="btn" onclick="activateService(2)" id="btn2">Activate Advanced</button>
-                    </div>
-
-                    <div class="service-card">
-                        <h3 style="color: #00d4ff; margin-bottom: 10px;">💎 PRO - 5,000 VLFY (test cycle)</h3>
-                        <p style="color:#aaa; font-size:0.9em; margin-top: 10px;">
-                            Safety note: Validify will never ask for your seed phrase. Wallet verification uses signature-only flows.
-                        </p>
-
-                        <ul style="color:#ccc; margin-bottom: 15px; padding-left: 18px;">
-                            <li>Multi-server monitoring dashboard</li>
-                            <li>Anomaly detection for high-risk events</li>
-                            <li>Incident timeline and exportable logs</li>
-                            <li>Optional response playbooks (roadmap)</li>
-                        </ul>
-
-                        <button class="btn" onclick="activateService(3)" id="btn3">Activate PRO</button>
-                    </div>
-                </div>
-                <div class="panel" style="margin-top: 20px;">
-                    <h2>🧩 Admin-Only Server Connect (Coming Soon)</h2>
-                
-                    <p style="color:#ccc; margin-bottom: 12px;">
-                        Validify’s Discord security engine will be delivered through an off-chain bot that connects to your server.
-                        This prototype is validating the trust-first workflow before the bot is publicly deployed.
-                    </p>
-                
-                    <div class="service-card">
-                        <h3 style="color: #00d4ff; margin-bottom: 10px;">What the bot will monitor (planned)</h3>
-                        <ul style="color:#ccc; margin-bottom: 10px; padding-left: 18px;">
-                            <li>Role and permission changes</li>
-                            <li>New bots added or removed</li>
-                            <li>Webhook creation and edits</li>
-                            <li>Suspicious link and domain patterns</li>
-                            <li>Admin impersonation and high-risk behavior signals</li>
-                        </ul>
-                        <p style="color:#aaa; font-size:0.9em;">
-                            Alerts will be evidence-backed and shown in your Validify dashboard.
-                        </p>
-                    </div>
-                
-                    <div class="service-card">
-                        <h3 style="color: #00d4ff; margin-bottom: 10px;">Minimum permissions approach</h3>
-                        <ul style="color:#ccc; margin-bottom: 10px; padding-left: 18px;">
-                            <li>View Audit Log (required for role/bot/webhook monitoring)</li>
-                            <li>View Channels</li>
-                            <li>Read Message History (only where the bot is enabled)</li>
-                            <li>Send Messages (for alerts)</li>
-                        </ul>
-                        <p style="color:#aaa; font-size:0.9em;">
-                            Validify aims to avoid broad permissions unless you enable optional auto-response features later.
-                        </p>
-                    </div>
-                
-                    <div class="service-card">
-                        <h3 style="color: #00d4ff; margin-bottom: 10px;">What Validify will NOT do</h3>
-                        <ul style="color:#ccc; margin-bottom: 10px; padding-left: 18px;">
-                            <li>Ask users for seed phrases or private keys</li>
-                            <li>Trigger wallet transactions inside Discord</li>
-                            <li>Require Admin permissions for basic alerting</li>
-                            <li>Auto-ban or auto-kick without explicit server opt-in</li>
-                        </ul>
-                    </div>
-                
-                    <button class="btn" onclick="showToast('Server connect is coming soon. This prototype is validating the trust-first flow.')" >
-                        🔗 Connect Discord Server (Admin Only) — Coming Soon
-                    </button>
-                
-                    <p style="color:#888; opacity: 0.85; font-size:0.85em; margin-top: 8px;">
-                        This button is a placeholder to validate the dashboard experience prior to bot release.
-                    </p>
-                </div>
-
-                <div class="panel" style="margin-top: 20px;">
-                    <h2>📋 Testnet Contracts</h2>
-                    <div class="contract-address">
-                        <strong style="color: #00ff88;">VLFY Token:</strong><br>
-                        0x813986e8908560FDD2Eda4DE2aF10623ae845b2f
-                        <br><a href="https://sepolia.etherscan.io/address/0x813986e8908560FDD2Eda4DE2aF10623ae845b2f" target="_blank" style="color: #00d4ff;">View on Etherscan →</a>
-                    </div>
-                    <div class="contract-address">
-                        <strong style="color: #00ff88;">Service Manager:</strong><br>
-                        0x976b419eA3aB69F643F9Bba82007D58dA275f966
-                        <br><a href="https://sepolia.etherscan.io/address/0x976b419eA3aB69F643F9Bba82007D58dA275f966" target="_blank" style="color: #00d4ff;">View on Etherscan →</a>
-                    </div>
-                    <button class="btn" onclick="addToken()">➕ Add VLFY to MetaMask</button>
-                </div>
-            </div>
-
-            <div>
-                <div class="panel">
-                    <h2>💰 Testnet Access Tokens (VLFY)</h2>
-                    <div class="stat-box">
-                        <div class="stat-label">Faucet Status</div>
-                        <div class="stat-value" style="font-size: 1.3em;" id="faucetStatus">Check wallet</div>
-                    </div>
-                    <button class="btn" onclick="claimFaucet()" id="faucetBtn">💧 Claim 10,000 Testnet VLFY</button>
-                    <p style="color: #888; font-size: 0.9em; margin-top: 10px; text-align: center;">
-                        ℹ️ Claim once every 24 hours
-                    </p>
-                </div>
-
-                <div class="panel" style="margin-top: 20px;">
-                    <h2>📊 Security Status</h2>
-
-                    <div class="stat-box">
-                        <div class="stat-label">Protection Engine</div>
-                        <div class="stat-value" style="font-size: 1.3em;" id="engineStatus">Inactive</div>
-                    </div>
-                
-                    <div class="stat-box">
-                        <div class="stat-label">Active Tier</div>
-                        <div class="stat-value" style="font-size: 1.5em;" id="tierName">None</div>
-                    </div>
-                
-                    <div class="stat-box">
-                        <div class="stat-label">Days Remaining</div>
-                        <div class="stat-value" id="daysRemaining">--</div>
-                    </div>
-                
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                        <div class="stat-box">
-                            <div class="stat-label">Links Flagged (24h)</div>
-                            <div class="stat-value" style="font-size: 1.3em;" id="linksFlagged">0</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Role Alerts (24h)</div>
-                            <div class="stat-value" style="font-size: 1.3em;" id="roleAlerts">0</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Bot Alerts (24h)</div>
-                            <div class="stat-value" style="font-size: 1.3em;" id="botAlerts">0</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Webhook Alerts (24h)</div>
-                            <div class="stat-value" style="font-size: 1.3em;" id="webhookAlerts">0</div>
-                        </div>
-                    </div>
-                
-                    <p style="color:#888; font-size:0.85em; margin-top: 10px;">
-                        Prototype feed — sample events until the bot is connected.
-                    </p>
-                
-                    <div class="feed-list" id="feedList"></div>
-                
-                    <button class="btn" onclick="loadData()" style="margin-top: 15px;">🔄 Refresh Status</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const CONTRACTS = {
-            token: '0x813986e8908560FDD2Eda4DE2aF10623ae845b2f',
-            service: '0x976b419eA3aB69F643F9Bba82007D58dA275f966'
-        };
-
-        const TOKEN_ABI = [
-            "function balanceOf(address) view returns (uint256)",
-            "function claimFaucet()",
-            "function canClaimFaucet(address) view returns (bool)",
-            "function allowance(address owner, address spender) view returns (uint256)",
-            "function approve(address,uint256) returns (bool)"
-        ];
-
-        const SERVICE_ABI = [
-            "function activateService(uint8)",
-            "function getSubscription(address) view returns (uint8,uint256,uint256,bool,uint256)",
-            "function hasActiveSubscription(address) view returns (bool)"
-        ];
-
-        let state = { provider: null, signer: null, address: null, tokenContract: null, serviceContract: null };
-            const DEMO_MODE = true;
-    
-            function getDemoMetrics(isActive, tierIndex) {
-                if (!isActive) {
-                    return { links: 0, roles: 0, bots: 0, webhooks: 0 };
-                }
-    
-                // Lightly scale demo numbers by tier
-                const scale = Math.max(1, tierIndex);
-                return {
-                    links: 3 * scale,
-                    roles: 1 * scale,
-                    bots: 1 * scale,
-                    webhooks: 1 * scale
-                };
-            }
-            function getDemoEvents(isActive, tierName) {
-                if (!isActive) return [];
-
-                return [
-                    {
-                        id: "link-001",
-                        category: "Link",
-                        title: "Suspicious domain flagged in #announcements",
-                        confidence: 0.86,
-                        time: "Recent",
-                        evidenceLabel: "View evidence",
-                        evidenceHref: "event.html?id=link-001"
-                    },
-                    {
-                        id: "roles-001",
-                        category: "Roles",
-                        title: "High-privilege role permission change detected",
-                        confidence: 0.78,
-                        time: "Recent",
-                        evidenceLabel: "Audit details",
-                        evidenceHref: "event.html?id=roles-001"
-                    },
-                    {
-                        id: "bots-001",
-                        category: "Bots",
-                        title: "New bot added with elevated permissions",
-                        confidence: 0.74,
-                        time: "Recent",
-                        evidenceLabel: "Review event",
-                        evidenceHref: "event.html?id=bots-001"
-                    },
-                    {
-                        id: "webhooks-001",
-                        category: "Webhooks",
-                        title: "New webhook created in a public channel",
-                        confidence: 0.81,
-                        time: "Recent",
-                        evidenceLabel: "Inspect log",
-                        evidenceHref: "event.html?id=webhooks-001"
-                    }
-                ];
-            }
-
-        function renderFeed(events) {
-            const feed = document.getElementById("feedList");
-            if (!feed) return;
-
-            if (!events.length) {
-                feed.innerHTML = `<div class="feed-item">
-                    <div class="feed-title">No recent events</div>
-                    <div class="feed-meta">Connect the bot to enable live monitoring.</div>
-                </div>`;
-                return;
-            }
-
-            feed.innerHTML = "";
-
-            events.forEach(ev => {
-                const item = document.createElement("div");
-                item.className = "feed-item";
-
-                item.innerHTML = `
-                    <div class="feed-title">${ev.title}</div>
-                    <div class="feed-meta">
-                        <span>Category: ${ev.category}</span>
-                        <span>Confidence: ${(ev.confidence * 100).toFixed(0)}%</span>
-                        <span>Time: ${ev.time}</span>
-                        <span>Tier: ${tierNameSafe()}</span>
-                    </div>
-                    <div style="margin-top: 6px;">
-                        <a class="feed-link" href="${ev.evidenceHref}" target="_blank" rel="noopener noreferrer">
-                            ${ev.evidenceLabel} →
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li class="dropdown">
+                    <a href="#services" class="dropdown-toggle">Services</a>
+                    <div class="dropdown-menu">
+                        <a href="#services">
+                            <div class="dropdown-icon">ðŸ”</div>
+                            <div>
+                                <strong>Multi-Sig Verification</strong>
+                                <small style="display:block; color:var(--text-muted);">Prevent fake link posts</small>
+                            </div>
+                        </a>
+                        <a href="#services">
+                            <div class="dropdown-icon">ðŸ“Š</div>
+                            <div>
+                                <strong>Security Monitoring</strong>
+                                <small style="display:block; color:var(--text-muted);">Real-time threat detection</small>
+                            </div>
+                        </a>
+                        <a href="#services">
+                            <div class="dropdown-icon">âœ…</div>
+                            <div>
+                                <strong>Project Audits</strong>
+                                <small style="display:block; color:var(--text-muted);">Trust scoring for NFT projects</small>
+                            </div>
                         </a>
                     </div>
-                `;
+                </li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="dashboard.html" class="nav-cta">Launch App</a></li>
+            </ul>
 
-                const link = item.querySelector(".feed-link");
-                if (link) {
-                    link.addEventListener("click", (e) => {
-                        if (!ev.evidenceHref || ev.evidenceHref === "#") {
-                            e.preventDefault();
-                            showToast("Evidence pages coming soon. Still in Alpha phase of testing.");
-                        }
-                    });
-                }
+            <div class="mobile-toggle" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span>ðŸ§ª</span>
+                <span>Currently in Beta on Sepolia Testnet</span>
+            </div>
+            <h1>Protect Your Discord From <span>Compromised Admins</span></h1>
+            <p class="hero-subtitle">
+                The first multi-signature link verification system for Discord. 
+                Stop fake mint links before they're posted â€” not after the damage is done.
+            </p>
+            <div class="hero-buttons">
+                <a href="dashboard.html" class="btn btn-primary">
+                    ðŸš€ Launch Dashboard
+                </a>
+                <a href="#how-it-works" class="btn btn-secondary">
+                    Learn How It Works
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-value">$2B+</div>
+                    <div class="stat-label">Lost to Discord Hacks</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">78%</div>
+                    <div class="stat-label">Happen During Mints</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Direct Competitors</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section id="problem">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">The Problem</div>
+                <h2 class="section-title">Discord Security is Broken</h2>
+                <p class="section-subtitle">
+                    One compromised admin account can destroy an entire community in minutes.
+                </p>
+            </div>
+
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <div class="problem-icon">ðŸ’€</div>
+                    <div class="problem-stat">$2B+</div>
+                    <h3>Lost Annually</h3>
+                    <p>Web3 communities lose billions each year to Discord-based phishing attacks and compromised admin accounts.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">ðŸŽ¯</div>
+                    <h3>Admin Account Takeover</h3>
+                    <p>Hackers target admin accounts with phishing, SIM swaps, and malware. One compromised account = full server access.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">âš¡</div>
+                    <h3>Fake Mint Links</h3>
+                    <p>Attackers post malicious mint links in announcements. By the time mods react, wallets are already drained.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">ðŸ”“</div>
+                    <h3>No Accountability</h3>
+                    <p>Discord's audit logs are easily manipulated. There's no immutable proof of who posted what and when.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">Our Services</div>
+                <h2 class="section-title">Complete Discord Security Suite</h2>
+                <p class="section-subtitle">
+                    Prevention-first security designed specifically for Web3 communities.
+                </p>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">ðŸ”</div>
+                    <h3>Multi-Signature Link Verification</h3>
+                    <p>Require multiple admins to approve any link before it's posted. Like a multi-sig wallet, but for your Discord announcements.</p>
+                    <ul class="service-features">
+                        <li>Configurable thresholds (e.g., 3 of 5 admins)</li>
+                        <li>Time-limited approval windows (30-60 seconds)</li>
+                        <li>Unique verification codes via DM</li>
+                        <li>Blockchain-recorded audit trail</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">ðŸ“Š</div>
+                    <h3>Real-Time Security Monitoring</h3>
+                    <p>24/7 monitoring of your Discord server for suspicious activity, with instant alerts to your admin team.</p>
+                    <ul class="service-features">
+                        <li>Role and permission change alerts</li>
+                        <li>Bot add/remove notifications</li>
+                        <li>Webhook creation monitoring</li>
+                        <li>Suspicious link detection</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">âœ…</div>
+                    <h3>Project Trust Audits</h3>
+                    <p>Comprehensive security audits for NFT projects with a 0-100 trust score that builds investor confidence.</p>
+                    <ul class="service-features">
+                        <li>Team transparency verification</li>
+                        <li>Community health analysis</li>
+                        <li>Technical foundation review</li>
+                        <li>Public trust badge display</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">How It Works</div>
+                <h2 class="section-title">Security in 4 Simple Steps</h2>
+                <p class="section-subtitle">
+                    Set up in minutes, protected for life.
+                </p>
+            </div>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Connect Your Wallet</h3>
+                        <p>Link your wallet to activate your subscription. All payments use VLFY tokens on Ethereum for transparent, verifiable transactions.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Add Validify Bot to Your Server</h3>
+                        <p>Invite our Discord bot with minimal permissions. We only request what's needed for security monitoring â€” no admin access required.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Register Your Admin Team</h3>
+                        <p>Add your trusted admins to the multi-sig verification system. Set your approval threshold (e.g., 3 of 5 must approve).</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Post Links Securely</h3>
+                        <p>When posting important links, use /validify post-link. All registered admins receive unique approval codes. Link only posts after threshold is met.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">Pricing</div>
+                <h2 class="section-title">Choose Your Protection Level</h2>
+                <p class="section-subtitle">
+                    Flexible plans for communities of all sizes. Pay with VLFY tokens.
+                </p>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-tier">Starter</div>
+                    <div class="pricing-name">Basic</div>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">$50</span>
+                        <span class="pricing-period">/month</span>
+                    </div>
+                    <div class="pricing-vlfy">500 VLFY tokens</div>
+                    <ul class="pricing-features">
+                        <li>Single server protection</li>
+                        <li>Role/permission change alerts</li>
+                        <li>Bot add/remove monitoring</li>
+                        <li>Webhook creation alerts</li>
+                        <li>Suspicious link warnings</li>
+                        <li>Email support</li>
+                    </ul>
+                    <a href="dashboard.html" class="btn btn-secondary pricing-cta">Get Started</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-tier">Most Popular</div>
+                    <div class="pricing-name">Advanced</div>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">$150</span>
+                        <span class="pricing-period">/month</span>
+                    </div>
+                    <div class="pricing-vlfy">1,500 VLFY tokens</div>
+                    <ul class="pricing-features">
+                        <li>Everything in Basic, plus:</li>
+                        <li>Multi-sig link verification</li>
+                        <li>DM phishing protection</li>
+                        <li>Mod impersonation alerts</li>
+                        <li>Priority notifications</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <a href="dashboard.html" class="btn btn-primary pricing-cta">Get Started</a>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-tier">Enterprise</div>
+                    <div class="pricing-name">Pro</div>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">$500</span>
+                        <span class="pricing-period">/month</span>
+                    </div>
+                    <div class="pricing-vlfy">5,000 VLFY tokens</div>
+                    <ul class="pricing-features">
+                        <li>Everything in Advanced, plus:</li>
+                        <li>Multi-server dashboard</li>
+                        <li>Advanced analytics & reporting</li>
+                        <li>Incident timeline exports</li>
+                        <li>Custom response playbooks</li>
+                        <li>Dedicated support manager</li>
+                    </ul>
+                    <a href="dashboard.html" class="btn btn-secondary pricing-cta">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">About Us</div>
+                <h2 class="section-title">Built By the Community, For the Community</h2>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-content">
+                    <h3>Why We Built Validify</h3>
+                    <p>
+                        We've watched too many communities get destroyed by a single compromised admin account. 
+                        Projects with months of work, thousands of members, and millions in TVL â€” wiped out in minutes 
+                        because of a fake mint link.
+                    </p>
+                    <p>
+                        Existing solutions are reactive. They detect bad links after they're posted. 
+                        By then, wallets are already drained. Validify is different â€” we prevent 
+                        malicious links from ever being posted in the first place.
+                    </p>
+                    <p>
+                        Our multi-signature verification system brings the same security model that protects 
+                        billions in crypto treasuries to Discord server management. Simple concept, massive impact.
+                    </p>
+                </div>
+
+                <div class="about-values">
+                    <div class="value-card">
+                        <h4>ðŸ”’ Security First</h4>
+                        <p>We never ask for seed phrases. Signature-only verification. Minimal permissions.</p>
+                    </div>
+                    <div class="value-card">
+                        <h4>ðŸŽ¯ Prevention > Detection</h4>
+                        <p>Stop threats before they happen, not after the damage is done.</p>
+                    </div>
+                    <div class="value-card">
+                        <h4>ðŸ“œ Transparency</h4>
+                        <p>Blockchain-verified audit trails. Open about what data we collect.</p>
+                    </div>
+                    <div class="value-card">
+                        <h4>ðŸ¤ Community Driven</h4>
+                        <p>Built with feedback from real project founders and community managers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">FAQ</div>
+                <h2 class="section-title">Frequently Asked Questions</h2>
+            </div>
+
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">Will Validify ever ask for my seed phrase?</div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <strong>NEVER.</strong> Validify only uses wallet signature verification through MetaMask. 
+                            We never ask for, store, or have access to your private keys or seed phrases. 
+                            If anyone claiming to be from Validify asks for this information, it's a scam.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How does multi-signature verification work?</div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            When you want to post a link, use /validify post-link. The bot DMs all registered admins 
+                            with unique approval codes. Each admin has 30-60 seconds to approve. Only when your 
+                            threshold (e.g., 3 of 5 admins) is met does the link get posted. Everything is logged on-chain.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What permissions does the bot need?</div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            We follow a minimum-permissions approach: View Audit Log, View Channels, Read Message History 
+                            (only in enabled channels), and Send Messages (for alerts). We do NOT require Administrator 
+                            permission for basic features.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What is VLFY token?</div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            VLFY is an ERC-20 token used to pay for Validify subscriptions. Currently on Sepolia testnet 
+                            (free to claim from our faucet). On mainnet, you'll be able to purchase VLFY with ETH on DEXs.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">When will the Discord bot be available?</div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Currently in private beta (Q1 2025). Public beta launches Q2 2025, with full production 
+                            release planned for Q3 2025. Join our waitlist to get early access.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Can I use Validify on multiple servers?</div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Basic and Advanced tiers support single-server protection. The Pro tier includes 
+                            multi-server dashboard for managing security across all your communities from one place.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">Contact</div>
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-subtitle">
+                    Questions? Partnership inquiries? We'd love to hear from you.
+                </p>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Let's Talk Security</h3>
+                    <p>
+                        Whether you're a project founder looking to protect your community, 
+                        an investor wanting to verify a project's security, or just curious 
+                        about how Validify works â€” we're here to help.
+                    </p>
+
+                    <div class="contact-methods">
+                        <a href="https://discord.gg/validify" class="contact-method" target="_blank">
+                            <div class="contact-method-icon">ðŸ’¬</div>
+                            <div>
+                                <strong>Discord</strong>
+                                <small style="display:block; color:var(--text-muted);">Join our community server</small>
+                            </div>
+                        </a>
+                        <a href="https://twitter.com/validifyprotocol" class="contact-method" target="_blank">
+                            <div class="contact-method-icon">ðŸ¦</div>
+                            <div>
+                                <strong>Twitter</strong>
+                                <small style="display:block; color:var(--text-muted);">@validifyprotocol</small>
+                            </div>
+                        </a>
+                        <a href="mailto:hello@validify.io" class="contact-method">
+                            <div class="contact-method-icon">ðŸ“§</div>
+                            <div>
+                                <strong>Email</strong>
+                                <small style="display:block; color:var(--text-muted);">hello@validify.io</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" placeholder="Partnership Inquiry">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" placeholder="Tell us about your project..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="#home" class="logo">
+                    <div class="logo-icon">ðŸ›¡ï¸</div>
+                    <span class="logo-text">VALIDIFY</span>
+                </a>
+                <p>
+                    The first multi-signature link verification system for Discord. 
+                    Protecting Web3 communities from compromised admin accounts.
+                </p>
+            </div>
+
+            <div class="footer-column">
+                <h4>Product</h4>
+                <ul class="footer-links">
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Trust & Safety</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>Â© 2025 Validify. All rights reserved. Currently in Beta on Sepolia Testnet.</p>
+            <div class="footer-socials">
+                <a href="https://discord.gg/validify" target="_blank" title="Discord">ðŸ’¬</a>
+                <a href="https://twitter.com/validifyprotocol" target="_blank" title="Twitter">ðŸ¦</a>
+                <a href="https://github.com/validify" target="_blank" title="GitHub">ðŸ’»</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('open');
+        }
+
+        // FAQ accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                const wasOpen = item.classList.contains('open');
                 
-                feed.appendChild(item);
+                // Close all items
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+                
+                // Open clicked item if it was closed
+                if (!wasOpen) {
+                    item.classList.add('open');
+                }
             });
+        });
 
-            function tierNameSafe() {
-                return document.getElementById("tierName")?.textContent || "Unknown";
-            }
-        }
-
-
-        async function connectWallet() {
-            try {
-                if (!window.ethereum) {
-                    showToast('Install MetaMask!', true);
-                    return;
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    document.querySelector('.nav-links').classList.remove('open');
                 }
+            });
+        });
 
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                state.provider = new ethers.providers.Web3Provider(window.ethereum);
-                state.signer = state.provider.getSigner();
-                state.address = accounts[0];
-
-                const network = await state.provider.getNetwork();
-                if (network.chainId !== 11155111) {
-                    showToast('Switch to Sepolia Testnet!', true);
-                    try {
-                        await window.ethereum.request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: '0xaa36a7' }]
-                        });
-                        window.location.reload();
-                    } catch (e) {
-                        showToast('Please switch to Sepolia manually', true);
-                    }
-                    return;
-                }
-
-                state.tokenContract = new ethers.Contract(CONTRACTS.token, TOKEN_ABI, state.signer);
-                state.serviceContract = new ethers.Contract(CONTRACTS.service, SERVICE_ABI, state.signer);
-
-                document.getElementById('connectBtn').textContent = '✅ Connected';
-                document.getElementById('connectBtn').disabled = true;
-                document.getElementById('address').textContent = state.address.slice(0,6) + '...' + state.address.slice(-4);
-                document.getElementById('walletInfo').classList.add('show');
-
-                showToast('Connected successfully!');
-                loadData();
-
-                window.ethereum.on('accountsChanged', () => window.location.reload());
-                window.ethereum.on('chainChanged', () => window.location.reload());
-            } catch (e) {
-                showToast('Connection failed: ' + e.message, true);
-            }
-        }
-
-            async function loadData() {
-                if (!state.address) {
-                    showToast('Connect wallet first!', true);
-                    return;
-                }
-            
-                try {
-                    // 1) ETH balance
-                    const ethBal = await state.provider.getBalance(state.address);
-                    const ethEl = document.getElementById('ethBal');
-                    if (ethEl) {
-                        ethEl.textContent = parseFloat(ethers.utils.formatEther(ethBal)).toFixed(3);
-                    }
-            
-                    // 2) VLFY balance
-                    const vlfyBal = await state.tokenContract.balanceOf(state.address);
-                    const vlfyEl = document.getElementById('vlfyBal');
-                    if (vlfyEl) {
-                        vlfyEl.textContent = ethers.utils.formatEther(vlfyBal).split('.')[0];
-                    }
-            
-                    // 3) Faucet cooldown + button state
-                    const canClaim = await state.tokenContract.canClaimFaucet(state.address);
-                    const faucetStatusEl = document.getElementById('faucetStatus');
-                    const faucetBtnEl = document.getElementById('faucetBtn');
-            
-                    if (faucetStatusEl) {
-                        faucetStatusEl.textContent = canClaim ? 'Ready!' : 'Wait 24h';
-                    }
-                    if (faucetBtnEl) {
-                        faucetBtnEl.disabled = !canClaim;
-                    }
-            
-                    // 4) Subscription data
-                    const sub = await state.serviceContract.getSubscription(state.address);
-            
-                    // You renamed Enterprise to PRO in UI
-                    const tierNames = ['None', 'Basic', 'Advanced', 'Pro'];
-            
-                    const tierIndex = Number(sub[0]);
-                    const tierName = tierNames[tierIndex] || "None";
-                    const isActive = Boolean(sub[3]);
-                    const daysRemaining = sub[4].toString();
-            
-                    // Security Status panel fields
-                    const engineEl = document.getElementById('engineStatus');
-                    if (engineEl) engineEl.textContent = isActive ? 'Active' : 'Inactive';
-            
-                    const tierEl = document.getElementById('tierName');
-                    if (tierEl) tierEl.textContent = tierName;
-            
-                    const daysEl = document.getElementById('daysRemaining');
-                    if (daysEl) daysEl.textContent = daysRemaining;
-            
-                    // 5) Demo telemetry + feed
-                    if (DEMO_MODE) {
-                        const m = getDemoMetrics(isActive, tierIndex);
-            
-                        // Header mini-stat = total activity
-                        const totalActivity = m.links + m.roles + m.bots + m.webhooks;
-                        const servicesEl = document.getElementById('services');
-                        if (servicesEl) servicesEl.textContent = isActive ? String(totalActivity) : "0";
-            
-                        const lf = document.getElementById('linksFlagged');
-                        if (lf) lf.textContent = m.links;
-            
-                        const ra = document.getElementById('roleAlerts');
-                        if (ra) ra.textContent = m.roles;
-            
-                        const ba = document.getElementById('botAlerts');
-                        if (ba) ba.textContent = m.bots;
-            
-                        const wa = document.getElementById('webhookAlerts');
-                        if (wa) wa.textContent = m.webhooks;
-            
-                        renderFeed(getDemoEvents(isActive, tierName));
-                    }
-            
-                } catch (e) {
-                    console.error('Load error:', e);
-                }
-            }
-
-        async function claimFaucet() {
-            if (!state.tokenContract) {
-                showToast('Connect wallet first!', true);
-                return;
-            }
-
-           try {
-                const canClaim = await state.tokenContract.canClaimFaucet(state.address);
-                if (!canClaim) {
-                    showToast('Faucet cooldown active. Please wait 24h.', true);
-                    return;
-               }
-
-               showModal('Claiming 10,000 VLFY...');
-               const tx = await state.tokenContract.claimFaucet();
-               updateModal('Waiting for confirmation...');
-               await tx.wait();
-               
-               hideModal();
-               showToast('Successfully claimed 10,000 VLFY!');
-               loadData();
-            } catch (e) {
-                hideModal();
-                showToast('Claim failed: ' + e.message, true);
-            }
-        }
-
-        async function activateService(tier) {
-            if (!state.serviceContract) {
-                showToast('Connect wallet first!', true);
-                return;
-            }
-
-            const prices = [0, 500, 1500, 5000];
-            const priceLabel = prices[tier];
-            const price = ethers.utils.parseEther(priceLabel.toString());
-
-            try {
-                showModal('Checking allowance...');
-
-                const allowance = await state.tokenContract.allowance(state.address, CONTRACTS.service);
-
-                if (allowance.lt(price)) {
-                    updateModal(
-                        `Approval needed: Allow Service Manager to spend ${prices[tier]} VLFY ` +
-                        `to activate your selected tier.`
-                    );
-
-                    const approveTx = await state.tokenContract.approve(CONTRACTS.service, price);
-                    updateModal('Waiting for approval confirmation...');
-                    await approveTx.wait();
-                }
-
-
-                updateModal('Activating service...');
-                const tx = await state.serviceContract.activateService(tier);
-                updateModal('Waiting for confirmation...');
-                await tx.wait();
-                
-                hideModal();
-                showToast('Service activated successfully! 🎉');
-                loadData();
-            } catch (e) {
-                hideModal();
-                showToast('Activation failed: ' + (e.reason || e.message), true);
-            }
-        }
-
-        async function addToken() {
-            try {
-                await window.ethereum.request({
-                    method: 'wallet_watchAsset',
-                    params: {
-                        type: 'ERC20',
-                        options: {
-                            address: CONTRACTS.token,
-                            symbol: 'VLFY',
-                            decimals: 18
-                        }
-                    }
-                });
-                showToast('VLFY added to MetaMask!');
-            } catch (e) {
-                showToast('Failed to add token', true);
-            }
-        }
-
-        function showToast(msg, error = false) {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.className = 'toast show' + (error ? ' error' : '');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
-        function showModal(text) {
-            document.getElementById('modalText').textContent = text;
-            document.getElementById('modal').classList.add('show');
-        }
-
-        function updateModal(text) {
-            document.getElementById('modalText').textContent = text;
-        }
-
-        function hideModal() {
-            document.getElementById('modal').classList.remove('show');
-        }
+        // Contact form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thanks for reaching out! We\'ll get back to you soon. (Form submission is a demo in this prototype)');
+            this.reset();
+        });
     </script>
 </body>
 </html>
