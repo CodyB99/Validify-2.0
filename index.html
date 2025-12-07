@@ -2085,7 +2085,7 @@
                     <div class="faq-question">Will Validify ever ask for my seed phrase?</div>
                     <div class="faq-answer">
                         <div class="faq-answer-content">
-                            <strong>NEVER.</strong> Validify only uses wallet signature verification through MetaMask. 
+                            <strong>NEVER.</strong> Validify only uses wallet signature verification. 
                             We never ask for, store, or have access to your private keys or seed phrases. 
                             If anyone claiming to be from Validify asks for this information, it's a scam.
                         </div>
@@ -2096,50 +2096,102 @@
                     <div class="faq-question">How does multi-signature verification work?</div>
                     <div class="faq-answer">
                         <div class="faq-answer-content">
-                            When you want to post a link, use /validify post-link. The bot DMs all registered admins 
-                            with unique approval codes. Each admin has 30-60 seconds to approve. Only when your 
-                            threshold (e.g., 3 of 5 admins) is met does the link get posted. Everything is logged on-chain.
+                            When an admin submits a link-containing announcement, Validify intercepts and holds it. 
+                            Designated approvers receive unique cryptographic codes. Each approver has a time-limited 
+                            window to verify. Only when your threshold (e.g., 3 of 5 admins) is met does the message 
+                            publish. All approvals are recorded on-chain.
                         </div>
                     </div>
                 </div>
 
                 <div class="faq-item">
-                    <div class="faq-question">What permissions does the bot need?</div>
+                    <div class="faq-question">What platforms does Validify support?</div>
                     <div class="faq-answer">
                         <div class="faq-answer-content">
-                            We follow a minimum-permissions approach: View Audit Log, View Channels, Read Message History 
-                            (only in enabled channels), and Send Messages (for alerts). We do NOT require Administrator 
-                            permission for basic features.
+                            Discord integration launches with the protocol in Q1 2026. Telegram expansion follows in Q2 2026. 
+                            Our public API and SDK (Q3 2026) will enable integration with any platform. We're building 
+                            infrastructure, not just a single-platform tool.
                         </div>
                     </div>
                 </div>
 
                 <div class="faq-item">
-                    <div class="faq-question">What is VLFY token?</div>
+                    <div class="faq-question">Will there be a token?</div>
                     <div class="faq-answer">
                         <div class="faq-answer-content">
-                            VLFY is an ERC-20 token used to pay for Validify subscriptions. Currently on Sepolia testnet 
-                            (free to claim from our faucet). On mainnet, you'll be able to purchase VLFY with ETH on DEXs.
+                            Token utility is planned for 2027, after the core protocol proves value. We're focused on 
+                            building real security infrastructure first. Token design will be informed by actual usage 
+                            patterns, not speculation. Details will be published in the 2027 roadmap.
                         </div>
                     </div>
                 </div>
 
                 <div class="faq-item">
-                    <div class="faq-question">When will the Discord bot be available?</div>
+                    <div class="faq-question">When does Validify launch?</div>
                     <div class="faq-answer">
                         <div class="faq-answer-content">
-                            Currently in private beta (Q1 2025). Public beta launches Q2 2025, with full production 
-                            release planned for Q3 2025. Join our waitlist to get early access.
+                            Protocol launches Q1 2026 with Discord integration, multi-sig verification, and on-chain 
+                            attestations. We're currently onboarding founding communities for early access. 
+                            <a href="#early-access" style="color: var(--primary);">Apply now</a> to be among the first protected.
                         </div>
                     </div>
                 </div>
 
                 <div class="faq-item">
-                    <div class="faq-question">Can I use Validify on multiple servers?</div>
+                    <div class="faq-question">How is Validify different from existing security bots?</div>
                     <div class="faq-answer">
                         <div class="faq-answer-content">
-                            Basic and Advanced tiers support single-server protection. The Pro tier includes 
-                            multi-server dashboard for managing security across all your communities from one place.
+                            Existing solutions detect threats <em>after</em> publication—when damage is already done. 
+                            Validify verifies <em>before</em> publication. We're not building a better blocklist. 
+                            We're building a verification layer that makes unauthorized announcements impossible.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What if Validify itself gets compromised?</div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Validify cannot post on your behalf—it can only <em>prevent</em> unauthorized posts. 
+                            Even if our systems were compromised, attackers couldn't use Validify to publish malicious content. 
+                            The worst case scenario is verification temporarily going offline, not active exploitation. 
+                            All smart contracts undergo third-party security audits before mainnet deployment.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What data does Validify collect?</div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            We collect only what's necessary for security: message hashes (not content), approval signatures, 
+                            and threat indicators. On-chain attestations use privacy-preserving hashed identifiers—your community 
+                            can't be enumerated from public blockchain data. We never store message content, user DMs, or 
+                            personal information. Full privacy policy available at launch.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What if approvers aren't available when I need to post?</div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            This is the security model working as intended. Legitimate announcements—mints, partnerships, 
+                            important updates—are planned in advance. "I need to post this link RIGHT NOW without verification" 
+                            is exactly what a compromised account would say. If your team can't coordinate approval for a 
+                            critical announcement, that's a signal to pause, not bypass security.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How much will Validify cost?</div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Pricing will be announced closer to launch. Founding communities in our early access program 
+                            receive extended free protection periods. We're designing pricing tiers that scale with community 
+                            size and protection needs—serious security shouldn't be limited to projects with massive budgets.
+                            <a href="#early-access" style="color: var(--primary);">Apply for early access</a> for founding community benefits.
                         </div>
                     </div>
                 </div>
