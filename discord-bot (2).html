@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Bot | Validify Protocol</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ff88;
+            --primary-dim: rgba(0, 255, 136, 0.15);
+            --secondary: #00d4ff;
+            --accent: #667eea;
+            --accent-2: #764ba2;
+            --dark: #0a0a0f;
+            --dark-card: rgba(10, 10, 15, 0.85);
+            --dark-lighter: #12121a;
+            --text: #ffffff;
+            --text-muted: #a0a0b0;
+            --danger: #ff4757;
+            --warning: #ffa502;
+            --success: #00ff88;
+            --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --gradient-dark: linear-gradient(180deg, #0a0a0f 0%, #1a1a2e 100%);
+            --glow: 0 0 40px rgba(0, 255, 136, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--gradient-dark);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-orb-1 {
+            width: 600px; height: 600px;
+            background: var(--accent);
+            top: -200px; right: -200px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-orb-2 {
+            width: 400px; height: 400px;
+            background: var(--accent-2);
+            bottom: -100px; left: -100px;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .logo-icon {
+            width: 40px; height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon svg { width: 100%; height: 100%; }
+
+        .logo-text {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+            background: var(--primary-dim);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary-dim);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+        }
+
+        .hero-icon {
+            width: 120px; height: 120px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .hero-icon svg { width: 100%; height: 100%; }
+
+        .discord-badge {
+            position: absolute;
+            bottom: -5px; right: -5px;
+            width: 45px; height: 45px;
+            background: #5865F2;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.5);
+        }
+
+        .discord-badge svg {
+            width: 28px; height: 28px;
+            fill: white;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.7;
+        }
+
+        .hero-tagline {
+            background: var(--primary-dim);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        .hero-tagline p {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--glow);
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: var(--primary-dim);
+        }
+
+        /* Sections */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 6rem 2rem;
+        }
+
+        .section-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            background: var(--primary-dim);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Protection Gap Section */
+        .protection-gap {
+            background: linear-gradient(180deg, transparent, rgba(255, 71, 87, 0.05), transparent);
+        }
+
+        .gap-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .gap-card {
+            padding: 2rem;
+            border-radius: 16px;
+            background: var(--dark-card);
+        }
+
+        .gap-card.problem {
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+
+        .gap-card.solution {
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .gap-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .gap-card.problem h3 { color: var(--danger); }
+        .gap-card.solution h3 { color: var(--primary); }
+
+        .gap-card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .gap-card ul {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .gap-card ul li {
+            padding: 0.5rem 0;
+            color: var(--text-muted);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .feature-card-icon {
+            width: 50px; height: 50px;
+            background: var(--primary-dim);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Timeline */
+        #roadmap {
+            background: var(--dark-lighter);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0; bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .timeline-phase {
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .phase-marker {
+            position: absolute;
+            left: -40px;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            background: var(--dark);
+            border: 3px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .phase-marker.completed {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        .phase-marker.current {
+            border-color: var(--secondary);
+            color: var(--secondary);
+            animation: pulse-marker 2s infinite;
+        }
+
+        @keyframes pulse-marker {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(0, 212, 255, 0); }
+        }
+
+        .phase-content {
+            background: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .phase-content.completed {
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .phase-content.current {
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .phase-title {
+            font-size: 1.3rem;
+            margin: 0;
+        }
+
+        .phase-badge {
+            padding: 0.35rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .phase-badge.completed {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--primary);
+        }
+
+        .phase-badge.current {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--secondary);
+        }
+
+        .phase-badge.upcoming {
+            background: rgba(102, 126, 234, 0.15);
+            color: var(--accent);
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .feature-item:last-child { border-bottom: none; }
+
+        .feature-icon {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .feature-icon.done {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--primary);
+        }
+
+        .feature-icon.progress {
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--secondary);
+        }
+
+        .feature-icon.planned {
+            background: rgba(102, 126, 234, 0.2);
+            color: var(--accent);
+        }
+
+        .feature-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .feature-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--dark-card);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 24px;
+            padding: 4rem;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover { color: var(--primary); }
+
+        .footer-copyright {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .gap-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2rem; }
+            .cta-section { padding: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 60 60">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#00ff88"/>
+                                <stop offset="50%" style="stop-color:#00d4ff"/>
+                                <stop offset="100%" style="stop-color:#667eea"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M30 4 L50 17 L46 43 L30 54 L14 43 L10 17 Z" fill="none" stroke="url(#logoGrad)" stroke-width="2.5"/>
+                        <path d="M22 22 L30 36 L38 22" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span class="logo-text">VALIDIFY</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="discord-bot.html" class="active">Discord Bot</a></li>
+                <li><a href="security-ecosystem.html">Security Architecture</a></li>
+                <li><a href="index.html#whitepaper">White Paper</a></li>
+                <li><a href="index.html#early-access">Request Access</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span>🤖</span>
+                <span>Discord Bot • Part of Validify Protocol</span>
+            </div>
+            
+            <div class="hero-icon">
+                <svg viewBox="0 0 60 60">
+                    <defs>
+                        <linearGradient id="heroGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00ff88"/>
+                            <stop offset="50%" style="stop-color:#00d4ff"/>
+                            <stop offset="100%" style="stop-color:#667eea"/>
+                        </linearGradient>
+                        <linearGradient id="heroGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea"/>
+                            <stop offset="100%" style="stop-color:#00ff88"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M30 4 L50 17 L46 43 L30 54 L14 43 L10 17 Z" fill="none" stroke="url(#heroGrad1)" stroke-width="2.5"/>
+                    <path d="M30 4 L30 28 L10 17 Z" fill="url(#heroGrad2)" opacity="0.3"/>
+                    <path d="M30 4 L50 17 L30 28 Z" fill="url(#heroGrad1)" opacity="0.4"/>
+                    <path d="M30 28 L14 43 L10 17 Z" fill="url(#heroGrad2)" opacity="0.2"/>
+                    <path d="M30 28 L46 43 L50 17 Z" fill="url(#heroGrad1)" opacity="0.25"/>
+                    <path d="M22 22 L30 36 L38 22" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="discord-badge">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <h1>Multi-Sig <span>Link Verification</span></h1>
+            <p class="hero-subtitle">
+                The Discord bot is the first layer of Validify protection. It intercepts link-containing announcements 
+                and requires cryptographic approval from multiple admins before publication.
+            </p>
+            
+            <div class="hero-tagline">
+                <p>Discord bots protect servers. Validify protects users.</p>
+            </div>
+
+            <div class="hero-buttons">
+                <a href="index.html#early-access" class="btn btn-primary">
+                    Request Early Access
+                </a>
+                <a href="#features" class="btn btn-secondary">
+                    See Features
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Protection Gap Section -->
+    <section class="protection-gap">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-label">The Protection Gap</span>
+                <h2 class="section-title">Why Multi-Sig Matters</h2>
+                <p class="section-subtitle">
+                    A single compromised admin can destroy an entire community. Multi-signature verification changes that.
+                </p>
+            </div>
+
+            <div class="gap-grid">
+                <div class="gap-card problem">
+                    <h3>❌ Without Validify</h3>
+                    <p>Compromised admin posts fake mint link. By the time moderators notice, wallets are drained.</p>
+                    <ul>
+                        <li><span style="color: var(--danger);">✗</span> Single point of failure</li>
+                        <li><span style="color: var(--danger);">✗</span> Reactive detection only</li>
+                        <li><span style="color: var(--danger);">✗</span> No proof of authorization</li>
+                        <li><span style="color: var(--danger);">✗</span> Protection ends at Discord</li>
+                    </ul>
+                </div>
+                <div class="gap-card solution">
+                    <h3>✓ With Validify</h3>
+                    <p>Link-containing announcements require approval from multiple admins before publication.</p>
+                    <ul>
+                        <li><span style="color: var(--primary);">✓</span> Multi-sig blocks unauthorized posts</li>
+                        <li><span style="color: var(--primary);">✓</span> Prevention, not just detection</li>
+                        <li><span style="color: var(--primary);">✓</span> On-chain attestation proof</li>
+                        <li><span style="color: var(--primary);">✓</span> Browser extension continues protection</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="text-align: center; padding: 2rem; background: var(--dark-card); border-radius: 16px; border: 1px solid rgba(0, 255, 136, 0.2);">
+                <p style="font-size: 1.1rem; color: var(--text); margin-bottom: 1rem;">
+                    <strong>The Discord bot is Layer 1.</strong> It stops malicious links from ever being posted.
+                </p>
+                <p style="color: var(--text-muted);">
+                    But protection doesn't stop there. The <a href="index.html#user-protection" style="color: var(--primary);">Validify browser extension</a> 
+                    verifies links when users connect their wallet—completing end-to-end protection.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-label">Bot Features</span>
+                <h2 class="section-title">Complete Discord Security</h2>
+                <p class="section-subtitle">
+                    Multi-signature verification, hardware wallet binding, and real-time threat intelligence.
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-card-icon">🔐</div>
+                    <h3>Multi-Sig Verification</h3>
+                    <p>Configure M-of-N approval thresholds. Links require multiple admin signatures before posting to protected channels.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">🔑</div>
+                    <h3>Hardware Wallet Binding</h3>
+                    <p>Admins prove identity through MetaMask, Ledger, or Trezor. Cryptographic signatures, not just Discord accounts.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">🔔</div>
+                    <h3>Security Alerts</h3>
+                    <p>Real-time notifications for all sensitive actions: role changes, bot additions, webhook creation, and configuration updates.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">📊</div>
+                    <h3>Admin Action Monitoring</h3>
+                    <p>Track and audit every sensitive action. Know who changed what, when, and get alerts for suspicious activity.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">⛓️</div>
+                    <h3>On-Chain Attestations</h3>
+                    <p>Permanent, tamper-proof record of all approvals on Ethereum via EAS. Verify authenticity of any past announcement.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">🌐</div>
+                    <h3>Threat Intelligence</h3>
+                    <p>Cross-community threat sharing. When one server identifies a scam link, all protected servers are warned.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-label">Development Roadmap</span>
+                <h2 class="section-title">Building in Public</h2>
+                <p class="section-subtitle">Track our progress as we build the Validify Discord bot.</p>
+            </div>
+
+            <div class="timeline">
+                <!-- Phase 1: Completed -->
+                <div class="timeline-phase">
+                    <div class="phase-marker completed">✓</div>
+                    <div class="phase-content completed">
+                        <div class="phase-header">
+                            <h3 class="phase-title">Phase 1: Core Security</h3>
+                            <span class="phase-badge completed">Completed</span>
+                        </div>
+                        <ul class="feature-list">
+                            <li class="feature-item">
+                                <div class="feature-icon done">✓</div>
+                                <div class="feature-info">
+                                    <h4>Multi-Signature Link Verification</h4>
+                                    <p>Configurable M-of-N approval thresholds. Links require multiple admin signatures before posting.</p>
+                                </div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon done">✓</div>
+                                <div class="feature-info">
+                                    <h4>Hardware Wallet Integration</h4>
+                                    <p>Admins can bind their identity to MetaMask or hardware wallets like Ledger and Trezor.</p>
+                                </div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon done">✓</div>
+                                <div class="feature-info">
+                                    <h4>Security Alert System</h4>
+                                    <p>Real-time notifications for all security events including wallet verifications and configuration changes.</p>
+                                </div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon done">✓</div>
+                                <div class="feature-info">
+                                    <h4>Human-Readable Verification Codes</h4>
+                                    <p>WORD-WORD-NUMBER format codes that are easy to read on hardware wallet screens.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Phase 2: Current -->
+                <div class="timeline-phase">
+                    <div class="phase-marker current">2</div>
+                    <div class="phase-content current">
+                        <div class="phase-header">
+                            <h3 class="phase-title">Phase 2: Enhanced Detection</h3>
+                            <span class="phase-badge current">Q1 2026</span>
+                        </div>
+                        <ul class="feature-list">
+                            <li class="feature-item">
+                                <div class="feature-icon done">✓</div>
+                                <div class="feature-info">
+                                    <h4>Role Permission Monitoring</h4>
+                                    <p>Alerts when roles gain dangerous permissions like Administrator or Manage Webhooks.</p>
+                                </div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon done">✓</div>
+                                <div class="feature-info">
+                                    <h4>Bot Addition Alerts</h4>
+                                    <p>Immediate notification when bots with elevated permissions are added.</p>
+                                </div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon progress">⏳</div>
+                                <div class="feature-info">
+                                    <h4>On-Chain Attestations (EAS)</h4>
+                                    <p>Permanent blockchain record of all approvals using Ethereum Attestation Service.</p>
+                                </div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon progress">⏳</div>
+                                <div class="feature-info">
+                                    <h4>Mainnet Deployment</h4>
+                                    <p>Launch Discord bot to production for founding communities.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Phase 3: Browser Extension -->
+                <div class="timeline-phase">
+                    <div class="phase-marker upcoming">3</div>
+                    <div class="phase-content">
+                        <div class="phase-header">
+                            <h3 class="phase-title">Phase 3: Browser Extension Integration</h3>
+                            <span class="phase-badge upcoming">Q2 2026</span>
+                        </div>
+                        <ul class="feature-list">
+                            <li class="feature-item">
+                                <div class="feature-icon planned">📋</div>
+                                <div class="feature-info">
+                                    <h4>Browser Extension Launch</h4>
+                                    <p>Verify attestations in browser before wallet connection. End-to-end protection.</p>
+                                </div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon planned">📋</div>
+                                <div class="feature-info">
+                                    <h4>Cross-Community Threat Sharing</h4>
+                                    <p>When one protected server identifies a scam, all servers in the network are warned.</p>
+                                </div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon planned">📋</div>
+                                <div class="feature-info">
+                                    <h4>Telegram Expansion</h4>
+                                    <p>Bring the same multi-sig protection to Telegram groups and channels.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Phase 4: Intelligence -->
+                <div class="timeline-phase">
+                    <div class="phase-marker upcoming">4</div>
+                    <div class="phase-content">
+                        <div class="phase-header">
+                            <h3 class="phase-title">Phase 4: Predictive Intelligence</h3>
+                            <span class="phase-badge upcoming">Q3-Q4 2026</span>
+                        </div>
+                        <ul class="feature-list">
+                            <li class="feature-item">
+                                <div class="feature-icon planned">📋</div>
+                                <div class="feature-info">
+                                    <h4>Public API & SDK</h4>
+                                    <p>Open infrastructure for third-party integrations and custom security workflows.</p>
+                                </div>
+                            </li>
+                            <li class="feature-item">
+                                <div class="feature-icon planned">📋</div>
+                                <div class="feature-info">
+                                    <h4>AI-Driven Anomaly Detection</h4>
+                                    <p>Pattern recognition across the network. Predict attacks before they happen.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section>
+        <div class="section-container">
+            <div class="cta-section">
+                <h2>Be First to Protect Your Community</h2>
+                <p>Join the early access waitlist and be among the first to deploy Validify when we launch in Q1 2026.</p>
+                <a href="index.html#early-access" class="btn btn-primary">
+                    Request Early Access →
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="discord-bot.html">Discord Bot</a>
+            <a href="security-ecosystem.html">Security Architecture</a>
+            <a href="index.html#whitepaper">White Paper</a>
+            <a href="index.html#faq">FAQ</a>
+        </div>
+        <p class="footer-copyright">© 2025 Validify Protocol. Launching Q1 2026.</p>
+    </footer>
+</body>
+</html>

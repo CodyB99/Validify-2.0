@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validify Security Ecosystem | Technical Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ff88;
+            --primary-dim: rgba(0, 255, 136, 0.15);
+            --secondary: #00d4ff;
+            --accent: #667eea;
+            --dark: #0a0a0f;
+            --dark-card: rgba(15, 15, 25, 0.95);
+            --text: #ffffff;
+            --text-muted: #a0a0b0;
+            --danger: #ff4757;
+            --warning: #ffa502;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(180deg, #0a0a0f 0%, #1a1a2e 100%);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo svg { width: 60px; height: 60px; }
+
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .header .version {
+            font-size: 0.9rem;
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+            background: var(--primary-dim);
+        }
+
+        /* Sections */
+        section { margin-bottom: 4rem; }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h2 .icon { font-size: 1.5rem; }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--secondary);
+        }
+
+        h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem;
+            color: var(--primary);
+        }
+
+        p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card.highlight {
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
+        }
+
+        .card.warning {
+            border-color: var(--danger);
+            background: rgba(255, 71, 87, 0.05);
+        }
+
+        /* Key Message Box */
+        .key-message {
+            background: var(--primary-dim);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .key-message p {
+            margin: 0;
+            color: var(--text);
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--danger);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        td { color: var(--text-muted); }
+
+        tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .feature-card .icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h4 {
+            margin: 0 0 0.5rem;
+            color: var(--text);
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Flow Comparison */
+        .flow-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .flow-card {
+            padding: 2rem;
+            border-radius: 16px;
+            background: var(--dark-card);
+        }
+
+        .flow-card.problem {
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+
+        .flow-card.solution {
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .flow-card h4 {
+            margin-top: 0;
+        }
+
+        .flow-card.problem h4 { color: var(--danger); }
+        .flow-card.solution h4 { color: var(--primary); }
+
+        .flow-steps {
+            list-style: none;
+        }
+
+        .flow-steps li {
+            padding: 0.75rem 0;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .flow-steps li .num {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .flow-card.problem .num {
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--danger);
+        }
+
+        .flow-card.solution .num {
+            background: var(--primary-dim);
+            color: var(--primary);
+        }
+
+        .flow-steps li.danger { color: var(--danger); font-weight: 600; }
+        .flow-steps li.success { color: var(--primary); font-weight: 600; }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.critical { background: rgba(255, 71, 87, 0.2); color: var(--danger); }
+        .badge.high { background: rgba(255, 165, 2, 0.2); color: var(--warning); }
+        .badge.medium { background: rgba(0, 212, 255, 0.2); color: var(--secondary); }
+        .badge.done { background: rgba(0, 255, 136, 0.2); color: var(--primary); }
+        .badge.planned { background: rgba(102, 126, 234, 0.2); color: var(--accent); }
+
+        /* Lists */
+        ul, ol {
+            color: var(--text-muted);
+            padding-left: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        li { margin-bottom: 0.5rem; }
+
+        /* Comparison Table */
+        .comparison-table { margin: 2rem 0; }
+
+        .comparison-table td:first-child {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .check { color: var(--primary); }
+        .cross { color: var(--danger); }
+        .partial { color: var(--warning); }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0; bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.5rem;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid var(--dark);
+        }
+
+        .timeline-item.future::before {
+            background: var(--accent);
+        }
+
+        .timeline-item h4 { margin-top: 0; }
+
+        /* Callout */
+        .callout {
+            background: var(--primary-dim);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .callout.warning {
+            background: rgba(255, 165, 2, 0.1);
+            border-color: var(--warning);
+        }
+
+        .callout.danger {
+            background: rgba(255, 71, 87, 0.1);
+            border-color: var(--danger);
+        }
+
+        .callout p {
+            margin: 0;
+            color: var(--text);
+        }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover { color: var(--primary); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .two-column, .flow-grid { grid-template-columns: 1fr; }
+        }
+
+        @media print {
+            body { background: white; color: black; }
+            .card, .stat-card, .feature-card { border: 1px solid #ccc; background: #f9f9f9; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg viewBox="0 0 60 60">
+                    <defs>
+                        <linearGradient id="logoGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00ff88"/>
+                            <stop offset="50%" style="stop-color:#00d4ff"/>
+                            <stop offset="100%" style="stop-color:#667eea"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M30 4 L50 17 L46 43 L30 54 L14 43 L10 17 Z" fill="none" stroke="url(#logoGrad1)" stroke-width="2.5"/>
+                    <path d="M30 4 L30 28 L10 17 Z" fill="url(#logoGrad1)" opacity="0.3"/>
+                    <path d="M30 4 L50 17 L30 28 Z" fill="url(#logoGrad1)" opacity="0.4"/>
+                    <path d="M30 28 L14 43 L10 17 Z" fill="url(#logoGrad1)" opacity="0.2"/>
+                    <path d="M30 28 L46 43 L50 17 Z" fill="url(#logoGrad1)" opacity="0.25"/>
+                    <path d="M22 22 L30 36 L38 22" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="logo-text">VALIDIFY</span>
+            </div>
+            <h1>Security Ecosystem Architecture</h1>
+            <p class="version">Technical Specification v2.0 • December 2025</p>
+            
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="discord-bot.html">Discord Bot</a>
+                <a href="index.html#whitepaper">White Paper</a>
+                <a href="index.html#early-access">Request Access</a>
+            </div>
+        </header>
+
+        <!-- Executive Summary -->
+        <section>
+            <h2><span class="icon">📋</span> Executive Summary</h2>
+            <div class="card highlight">
+                <p style="color: var(--text); font-size: 1.1rem; margin-bottom: 1.5rem;">
+                    <strong>Validify is an end-to-end verification protocol</strong> that protects Web3 communities from compromised admin attacks, phishing, and wallet drainers—from Discord announcement to wallet connection.
+                </p>
+                <p>
+                    Unlike existing solutions that detect threats AFTER they've been posted, Validify prevents malicious content from ever reaching community members through cryptographic multi-signature verification, and continues protection via browser extension when users leave Discord.
+                </p>
+            </div>
+
+            <div class="key-message">
+                <p>Discord bots protect servers. Validify protects users.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">$2.5B</div>
+                    <div class="stat-label">Web3 Security Losses (2024)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$494M</div>
+                    <div class="stat-label">Phishing Attacks Alone</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">+67%</div>
+                    <div class="stat-label">YoY Increase in Phishing</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">332K</div>
+                    <div class="stat-label">Victim Addresses in 2024</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Problem -->
+        <section>
+            <h2><span class="icon">⚠️</span> The Problem</h2>
+            <div class="card warning">
+                <h4 style="color: var(--danger);">Discord: The #1 Attack Vector for Web3</h4>
+                <p>
+                    Web3 communities have lost billions through compromised Discord servers. When an admin account is hacked, attackers can post phishing links to announcement channels that reach thousands of users instantly.
+                </p>
+                <ul>
+                    <li>A single compromised admin can drain an entire community</li>
+                    <li>Traditional moderation bots detect threats AFTER posting</li>
+                    <li>No cryptographic proof of who authorized announcements</li>
+                    <li><strong>Protection ends when users leave Discord</strong></li>
+                </ul>
+            </div>
+
+            <h3>The Protection Gap</h3>
+            <p>Current security solutions protect Discord servers but not users. The actual wallet drain happens in the browser—after users click and leave Discord.</p>
+
+            <div class="flow-grid">
+                <div class="flow-card problem">
+                    <h4>❌ Other Security Bots</h4>
+                    <ul class="flow-steps">
+                        <li><span class="num">1</span> Malicious link posted in Discord</li>
+                        <li><span class="num">2</span> User clicks link → leaves Discord</li>
+                        <li><span class="num">3</span> User on fake site (NO PROTECTION)</li>
+                        <li class="danger"><span class="num">4</span> Wallet drained 💀</li>
+                    </ul>
+                </div>
+                <div class="flow-card solution">
+                    <h4>✓ Validify End-to-End</h4>
+                    <ul class="flow-steps">
+                        <li><span class="num">1</span> Multi-sig blocks unauthorized links</li>
+                        <li><span class="num">2</span> Verified link posted with attestation</li>
+                        <li><span class="num">3</span> Extension verifies before wallet connect</li>
+                        <li class="success"><span class="num">4</span> User protected ✓</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Protocol -->
+        <section>
+            <h2><span class="icon">🔒</span> Core Protocol Components</h2>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="icon">🔐</div>
+                    <h4>Multi-Signature Verification</h4>
+                    <p>M-of-N admin approval required before link-containing announcements publish. Configurable thresholds, time-limited windows, cryptographic codes.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🔌</div>
+                    <h4>Browser Extension</h4>
+                    <p>Verifies links at point of wallet connection. Shows green/yellow/red trust indicators. Free for users. KEY DIFFERENTIATOR.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">⛓️</div>
+                    <h4>On-Chain Attestations</h4>
+                    <p>Immutable record of all approvals on Ethereum via EAS. Privacy-preserving hashed identifiers. Dispute resolution evidence.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🌐</div>
+                    <h4>Threat Intelligence Network</h4>
+                    <p>Cross-community threat sharing. When one server identifies a scam, all protected servers are warned. Network effects strengthen defense.</p>
+                </div>
+            </div>
+
+            <h3>Two-Sided Network Effect</h3>
+            <div class="two-column">
+                <div class="card">
+                    <h4>For Projects</h4>
+                    <ul>
+                        <li>Use Validify to attest legitimate announcements</li>
+                        <li>Verified links display as "trusted" to users</li>
+                        <li>Build verifiable security reputation</li>
+                        <li>More users with extension = more value</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>For Users</h4>
+                    <ul>
+                        <li>Install free browser extension</li>
+                        <li>See verification status before wallet connect</li>
+                        <li>Protected from unverified links</li>
+                        <li>More projects using Validify = more value</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="callout">
+                <p><strong>The Flywheel:</strong> Projects sign up because users have the extension → Users install because projects use Validify → More projects sign up → More users install.</p>
+            </div>
+        </section>
+
+        <!-- Technical Architecture -->
+        <section>
+            <h2><span class="icon">⚙️</span> Technical Architecture</h2>
+
+            <h3>System Components</h3>
+            <table>
+                <tr>
+                    <th>Component</th>
+                    <th>Function</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>Discord Bot</td>
+                    <td>Intercepts links, manages approvals, publishes verified messages</td>
+                    <td><span class="badge done">Building</span></td>
+                </tr>
+                <tr>
+                    <td>Browser Extension</td>
+                    <td>Verifies attestations, displays trust indicators, warns before wallet connect</td>
+                    <td><span class="badge planned">Q2 2026</span></td>
+                </tr>
+                <tr>
+                    <td>Attestation Service</td>
+                    <td>Records approvals on Ethereum via EAS, queryable by extension</td>
+                    <td><span class="badge high">Q1 2026</span></td>
+                </tr>
+                <tr>
+                    <td>Threat Intelligence API</td>
+                    <td>Aggregates reports, computes risk scores, distributes alerts</td>
+                    <td><span class="badge planned">Q2 2026</span></td>
+                </tr>
+                <tr>
+                    <td>Public API/SDK</td>
+                    <td>Third-party integrations, custom workflows</td>
+                    <td><span class="badge planned">Q3 2026</span></td>
+                </tr>
+            </table>
+
+            <h3>Security Model</h3>
+            <div class="card">
+                <h4>Minimum Trust Principle</h4>
+                <ul>
+                    <li><strong>Never asks for seed phrases</strong> or private keys</li>
+                    <li><strong>Cannot post on behalf of projects</strong>—can only prevent unauthorized posts</li>
+                    <li><strong>Fail-safe design:</strong> Even if Validify systems were compromised, attackers couldn't publish malicious content</li>
+                    <li><strong>Worst-case scenario:</strong> Verification goes offline, not active exploitation</li>
+                    <li><strong>Third-party audits:</strong> All smart contracts audited before mainnet</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Competitive Advantage -->
+        <section>
+            <h2><span class="icon">💪</span> Competitive Advantage</h2>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>Feature</th>
+                    <th>Validify</th>
+                    <th>Pandez</th>
+                    <th>Wick</th>
+                    <th>Wallet Guard</th>
+                </tr>
+                <tr>
+                    <td>Multi-sig link approval</td>
+                    <td class="check">✅ Core Feature</td>
+                    <td class="partial">⚠️ 2FA only</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                </tr>
+                <tr>
+                    <td>Browser extension verification</td>
+                    <td class="check">✅ Integrated</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                    <td class="check">✅ Browser only</td>
+                </tr>
+                <tr>
+                    <td>Protection beyond Discord</td>
+                    <td class="check">✅ End-to-end</td>
+                    <td class="cross">❌ Ends at server</td>
+                    <td class="cross">❌ Ends at server</td>
+                    <td class="partial">⚠️ No server protection</td>
+                </tr>
+                <tr>
+                    <td>On-chain attestations</td>
+                    <td class="check">✅ Q1 2026</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                </tr>
+                <tr>
+                    <td>Hardware wallet binding</td>
+                    <td class="check">✅ Core Feature</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                </tr>
+                <tr>
+                    <td>Cross-platform threat intel</td>
+                    <td class="check">✅ Network Effect</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                    <td class="partial">⚠️ Limited</td>
+                </tr>
+            </table>
+
+            <div class="callout">
+                <p><strong>Validify's Unique Position:</strong> Only solution combining server-side multi-signature verification + browser-side wallet protection + on-chain attestations + cross-community threat intelligence. We close the protection gap that all other solutions leave open.</p>
+            </div>
+        </section>
+
+        <!-- Roadmap -->
+        <section>
+            <h2><span class="icon">🗺️</span> 2026 Development Roadmap</h2>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>Q1 2026: Foundation <span class="badge done">In Progress</span></h4>
+                    <p>Multi-signature verification protocol on Ethereum mainnet. Discord integration. Third-party security audit. Founding community onboarding.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Q2 2026: Intelligence <span class="badge high">Planned</span></h4>
+                    <p>Browser extension launch (Chrome). Cross-community threat intelligence network. On-chain attestation layer via EAS. Telegram expansion.</p>
+                </div>
+                <div class="timeline-item future">
+                    <h4>Q3 2026: Expansion <span class="badge planned">Planned</span></h4>
+                    <p>Public API and developer SDK. Project Trust Score with on-chain badges. Security researcher partnership program. Third-party platform integrations.</p>
+                </div>
+                <div class="timeline-item future">
+                    <h4>Q4 2026: Prediction <span class="badge planned">Planned</span></h4>
+                    <p>AI-driven anomaly detection. Predictive risk scoring. DAO governance for protocol standards. 2027 roadmap with token utility framework.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Business Model -->
+        <section>
+            <h2><span class="icon">💰</span> Business Model</h2>
+
+            <div class="two-column">
+                <div class="card">
+                    <h4>Discord Bot (B2B)</h4>
+                    <p>Pricing scales with community size and feature requirements. Founding communities receive extended free protection.</p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;"><em>Final pricing announced at launch.</em></p>
+                </div>
+                <div class="card">
+                    <h4>Browser Extension (B2C)</h4>
+                    <p><strong>Free for users.</strong> Value flows from projects who want their legitimate links to display as verified.</p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;"><em>Premium features TBD.</em></p>
+                </div>
+            </div>
+
+            <h3>Token Economics</h3>
+            <p>Token utility planned for 2027, after core protocol proves value. Design will be informed by actual usage patterns. Details in 2027 roadmap.</p>
+        </section>
+
+        <!-- Success Metrics -->
+        <section>
+            <h2><span class="icon">📈</span> Success Metrics</h2>
+
+            <table>
+                <tr>
+                    <th>Metric</th>
+                    <th>Target</th>
+                    <th>Measurement</th>
+                </tr>
+                <tr>
+                    <td>Malicious links blocked before posting</td>
+                    <td>>99%</td>
+                    <td>Blocked / Total malicious attempts</td>
+                </tr>
+                <tr>
+                    <td>False positive rate</td>
+                    <td>&lt;1%</td>
+                    <td>Legitimate links incorrectly blocked</td>
+                </tr>
+                <tr>
+                    <td>Protected server incidents</td>
+                    <td>0</td>
+                    <td>Successful attacks on Validify-protected servers</td>
+                </tr>
+                <tr>
+                    <td>Extension user warnings heeded</td>
+                    <td>>90%</td>
+                    <td>Users who don't proceed after warning</td>
+                </tr>
+                <tr>
+                    <td>User assets protected</td>
+                    <td>Track total</td>
+                    <td>Value of blocked malicious transactions</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Conclusion -->
+        <section>
+            <h2><span class="icon">🎯</span> Conclusion</h2>
+
+            <div class="card highlight">
+                <p style="color: var(--text); font-size: 1.1rem; margin-bottom: 1.5rem;">
+                    Validify addresses the Web3 security crisis with an end-to-end approach no competitor offers:
+                </p>
+                <ul style="color: var(--text); margin: 1.5rem 0;">
+                    <li><strong>Prevention over detection</strong> — Links verified BEFORE posting</li>
+                    <li><strong>Protection beyond Discord</strong> — Browser extension verifies at wallet connection</li>
+                    <li><strong>Cryptographic identity</strong> — Hardware wallets prove admin legitimacy</li>
+                    <li><strong>Immutable audit trail</strong> — On-chain attestations for legal-grade proof</li>
+                    <li><strong>Network effect defense</strong> — Every community makes the network stronger</li>
+                </ul>
+                <div class="key-message" style="margin-top: 1.5rem;">
+                    <p>Discord bots protect servers. Validify protects users—from announcement to transaction.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="discord-bot.html">Discord Bot</a>
+                <a href="index.html#whitepaper">White Paper</a>
+                <a href="index.html#early-access">Request Access</a>
+            </div>
+            <p>Validify Protocol • Security Ecosystem Architecture v2.0</p>
+            <p>December 2025 • Launching Q1 2026</p>
+        </footer>
+    </div>
+</body>
+</html>
